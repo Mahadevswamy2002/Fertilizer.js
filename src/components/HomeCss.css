@@ -1,0 +1,42 @@
+/* HomeCss.css */
+
+.home {
+  width: 100%;
+  min-height: 100vh;
+  /* Add your background image here */
+  background-size: cover;
+  background-position: center;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+.home-interface {
+  width: 100%;
+  height: 400px;
+  text-align: center;
+  color: black;
+  background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+  padding: 4px;
+  background-image: url('../images/bg1.jfif'); /* Relative path */
+  background-size: cover; /* Ensure image covers the area */
+  background-position: center;
+  border-radius: 10px;
+  margin-bottom: 30px;
+  font-size: 40px;
+}
+
+.home-products {
+  background-color: white;
+  padding: 10px;
+  border-radius: 10px;
+  background-image: url('../images/loging_bg.jfif'); /* Relative path */
+  background-size: cover; /* Ensure image covers the area */
+  background-position: center;
+}
+
+.products {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  gap: 10px;
+}

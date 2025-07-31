@@ -1,0 +1,113 @@
+import shoes1 from "./images/shoes1.png";
+import shoes2 from "./images/shoes2.png";
+import shoes3 from "./images/shoes3.png";
+import shoes4 from "./images/shoes4.png";
+import shoes5 from "./images/shoes5.png";
+import shoes6 from "./images/shoes6.png";
+import shoes7 from "./images/shoes7.png";
+import shoes8 from "./images/shoes8.png";
+
+
+
+
+
+
+
+const products = [
+    {
+      id: 1,
+      image: shoes1,
+      alt: "Nike shoes 1",
+      name: "air Force",
+      title: "NIKE",
+      description:
+        "The Big Oxmox advised her not to do so, because there were thousands of bad Commas",
+      price: "$999.99",
+      stars: 5,
+    },
+    {
+      id: 2,
+      image: shoes2,
+      alt: "Nike shoes 2",
+      name: "air Force",
+      title: "NIKE",
+      description:
+        "The Big Oxmox advised her not to do so, because there were thousands of bad Commas",
+      price: "$199.99",
+      stars: 4.5,
+    },
+    // Add more products as needed
+    {
+      id: 3,
+      image: shoes3,
+      alt: "Nike shoes 3",
+      name: "air Force",
+      title: "NIKE",
+      description:
+        "The Big Oxmox advised her not to do so, because there were thousands of bad Commas",
+      price: "$199.99",
+      stars: 4.5,
+    },
+    // Add more products as needed
+    {
+      id: 4,
+      image: shoes4,
+      alt: "Nike shoes 4",
+      name: "air Force",
+      title: "NIKE",
+      description:
+        "The Big Oxmox advised her not to do so, because there were thousands of bad Commas",
+      price: "$199.99",
+      stars: 4.5,
+    },
+    // Add more products as needed
+    {
+      id: 5,
+      image: shoes5,
+      alt: "Nike shoes 5",
+      name: "air Force",
+      title: "NIKE",
+      description:
+        "The Big Oxmox advised her not to do so, because there were thousands of bad Commas",
+      price: "$199.99",
+      stars: 4.5,
+    },
+    // Add more products as needed
+    {
+      id: 6,
+      image: shoes6,
+      alt: "Nike shoes 6",
+      name: "air Force",
+      title: "NIKE",
+      description:
+        "The Big Oxmox advised her not to do so, because there were thousands of bad Commas",
+      price: "$199.99",
+      stars: 4.5,
+    },
+    // Add more products as needed
+    {
+      id: 7,
+      image: shoes7,
+      alt: "Nike shoes 7",
+      name: "air Force",
+      title: "NIKE",
+      description:
+        "The Big Oxmox advised her not to do so, because there were thousands of bad Commas",
+      price: "$199.99",
+      stars: 4.5,
+    },
+    // Add more products as needed
+    {
+      id: 8,
+      image: shoes8,
+      alt: "Nike shoes 8",
+      name: "air Force",
+      title: "NIKE",
+      description:
+        "The Big Oxmox advised her not to do so, because there were thousands of bad Commas",
+      price: "$199.99",
+      stars: 4.5,
+    },
+  
+  
+  ];

@@ -1,0 +1,336 @@
+
+Cart.js
+import React from 'react';
+import { Link } from 'react-router-dom';
+import './CartCss.css';
+
+function Cart({ cart = [], removeFromCart }) {
+  console.log("Cart Items: ", cart); // Debugging line
+
+  return (
+    <div className="cart">
+      <h1>Cart</h1>
+      <div className="cart_items">
+        {cart.length === 0 && <p>Your cart is empty</p>}
+        {cart.map((item, index) => (
+          <div className="cart_item" key={index}>
+            <img src={item.image || 'default-image.png'} alt={item.name || 'Product Image'} />
+            <div className="cart_item_details">
+              <h2>{item.name || 'Product Name'}</h2>
+              <p>{item.description || 'Product Description'}</p>
+              <h3>${item.price || '0.00'}</h3>
+              <p>Size: {item.size || 'N/A'}</p>
+              <button onClick={() => removeFromCart(item.id)}>Remove</button>
+            </div>
+          </div>
+        ))}
+      </div>
+      {cart.length > 0 && (
+        <Link to="/payment"><button>Proceed to Payment</button></Link>
+      )}
+    </div>
+  );
+}
+
+export default Cart;
+-----------------------------
+Payment.js
+
+import React, { useState } from 'react';
+import "./PaymentCss.css"
+
+function Payment({ clearCart }) {
+  const [paymentMethod, setPaymentMethod] = useState('');
+
+  const handlePayment = () => {
+    if (paymentMethod) {
+      alert(`Payment successful with ${paymentMethod}`);
+      clearCart(); // Clear the cart after successful payment
+    } else {
+      alert('Please select a payment method');
+    }
+  };
+
+  return (
+    <div className="payment">
+      <h1>Payment</h1>
+      <p>Select a payment method:</p>
+      <div>
+        <label>
+          <input 
+            type="radio" 
+            value="Cash on Delivery" 
+            checked={paymentMethod === 'Cash on Delivery'} 
+            onChange={(e) => setPaymentMethod(e.target.value)} 
+          />
+          Cash on Delivery
+        </label>
+        <label>
+          <input 
+            type="radio" 
+            value="Online Payment" 
+            checked={paymentMethod === 'Online Payment'} 
+            onChange={(e) => setPaymentMethod(e.target.value)} 
+          />
+          Online Payment
+        </label>
+      </div>
+      <button onClick={handlePayment}>Proceed to Pay</button>
+    </div>
+  );
+}
+
+export default Payment;
+
+--------------------------------
+Profile.jsimport React, { useState } from 'react';
+import "./ProfileCss.css"
+
+function Profile({ user }) {
+  const [isEditing, setIsEditing] = useState(false);
+  const [address, setAddress] = useState(user?.address || '');
+
+  const handleEditToggle = () => {
+    setIsEditing(!isEditing);
+  };
+
+  const handleAddressChange = (e) => {
+    setAddress(e.target.value);
+  };
+
+  const handleAddressSave = () => {
+    // Logic to save the address (e.g., update the user object, make an API call)
+    setIsEditing(false);
+    console.log("Address saved:", address); // Mock save
+  };
+
+  return (
+    <div className="profile">
+      <h1>Profile</h1>
+      {user ? (
+        <>
+          <p>Name: {user.name}</p>
+          <p>Email: {user.email}</p>
+          <h2>Address</h2>
+          {isEditing ? (
+            <div className="address-edit">
+              <textarea
+                value={address}
+                onChange={handleAddressChange}
+                rows="4"
+              ></textarea>
+              <button onClick={handleAddressSave}>Save</button>
+            </div>
+          ) : (
+            <div className="address-display">
+              <p>{address || "No address provided"}</p>
+              <button onClick={handleEditToggle}>Edit Address</button>
+            </div>
+          )}
+          <h2>My Orders</h2>
+          {/* Display user orders here */}
+        </>
+      ) : (
+        <p>Please <a href="/login">login</a> to see your profile.</p>
+      )}
+    </div>
+  );
+}
+
+export default Profile;
+--------------------------------------------------
+ProductCart.jsimport React from "react";
+import Product from "./Products";
+import "./ProductCardCss.css"
+
+function Products({ products = [], addToCart }) {
+  return (
+    <div className="productcart">
+      <h1>products</h1>
+      <div className="products">
+        {products.map((product) => (
+          <Product key={product.id} product={product} addToCart={addToCart} />
+        ))}
+      </div>
+    </div>
+  );
+}
+
+export default Products;
+-----------------------------------
+App.jsimport React, { useState } from "react";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import "./App.css";
+import Navbar from "./components/Navbar";
+import Home from "./components/Home";
+import Products from "./components/ProductCard";
+import Cart from "./components/Cart";
+import Profile from "./components/Profile";
+import Payment from "./components/Payment";
+import Login from "./components/Login";
+
+import shoes1 from "./images/shoes1.png";
+import shoes2 from "./images/shoes2.png";
+import shoes3 from "./images/shoes3.png";
+import shoes4 from "./images/shoes4.png";
+import shoes5 from "./images/shoes5.png";
+import shoes6 from "./images/shoes6.png";
+import shoes7 from "./images/shoes7.png";
+import shoes8 from "./images/shoes8.png";
+
+function App() {
+  const [cart, setCart] = useState([]);
+  const [user, setUser] = useState({ name: "", email: "", addresses: [] });
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  const products = [
+    {
+      id: 1,
+      image: shoes1,
+      alt: "Nike shoes 1",
+      name: "air Force",
+      title: "NIKE",
+      description:
+        "The Big Oxmox advised her not to do so, because there were thousands of bad Commas",
+      price: "$999.99",
+      stars: 5,
+    },
+    {
+      id: 2,
+      image: shoes2,
+      alt: "Nike shoes 2",
+      name: "air Force",
+      title: "NIKE",
+      description:
+        "The Big Oxmox advised her not to do so, because there were thousands of bad Commas",
+      price: "$199.99",
+      stars: 4.5,
+    },
+    // Add more products as needed
+    {
+      id: 3,
+      image: shoes3,
+      alt: "Nike shoes 3",
+      name: "air Force",
+      title: "NIKE",
+      description:
+        "The Big Oxmox advised her not to do so, because there were thousands of bad Commas",
+      price: "$199.99",
+      stars: 4.5,
+    },
+    // Add more products as needed
+    {
+      id: 4,
+      image: shoes4,
+      alt: "Nike shoes 4",
+      name: "air Force",
+      title: "NIKE",
+      description:
+        "The Big Oxmox advised her not to do so, because there were thousands of bad Commas",
+      price: "$199.99",
+      stars: 4.5,
+    },
+    // Add more products as needed
+    {
+      id: 5,
+      image: shoes5,
+      alt: "Nike shoes 5",
+      name: "air Force",
+      title: "NIKE",
+      description:
+        "The Big Oxmox advised her not to do so, because there were thousands of bad Commas",
+      price: "$199.99",
+      stars: 4.5,
+    },
+    // Add more products as needed
+    {
+      id: 6,
+      image: shoes6,
+      alt: "Nike shoes 6",
+      name: "air Force",
+      title: "NIKE",
+      description:
+        "The Big Oxmox advised her not to do so, because there were thousands of bad Commas",
+      price: "$199.99",
+      stars: 4.5,
+    },
+    // Add more products as needed
+    {
+      id: 7,
+      image: shoes7,
+      alt: "Nike shoes 7",
+      name: "air Force",
+      title: "NIKE",
+      description:
+        "The Big Oxmox advised her not to do so, because there were thousands of bad Commas",
+      price: "$199.99",
+      stars: 4.5,
+    },
+    // Add more products as needed
+    {
+      id: 8,
+      image: shoes8,
+      alt: "Nike shoes 8",
+      name: "air Force",
+      title: "NIKE",
+      description:
+        "The Big Oxmox advised her not to do so, because there were thousands of bad Commas",
+      price: "$199.99",
+      stars: 4.5,
+    },
+  
+  
+  ];
+
+  const addToCart = (product, size) => {
+    setCart([...cart, { ...product, size }]);
+  };
+
+  const removeFromCart = (productId) => {
+    setCart(cart.filter(product => product.id !== productId));
+  };
+
+  const handleLogin = (userData) => {
+    // Mock function to simulate saving data to a database
+    console.log("User data saved to database:", userData);
+    setUser(userData);
+    setIsLoggedIn(true);
+  };
+
+  const handleLogout = () => {
+    setUser({ name: "", email: "", addresses: [] });
+    setIsLoggedIn(false);
+  };
+
+  const clearCart = () => {
+    setCart([]);
+  };
+
+  return (
+    <Router>
+      <div className="App">
+        <Navbar
+          cartCount={cart.length}
+          isLoggedIn={isLoggedIn}
+          handleLogout={handleLogout}
+        />
+        <Routes>
+          <Route path="/" element={<Home products={products} addToCart={addToCart} />} />
+          <Route path="/products" element={<Products products={products} addToCart={addToCart} />} />
+          <Route path="/cart" element={<Cart cart={cart} removeFromCart={removeFromCart} />} />
+          <Route path="/profile" element={<Profile user={user} isLoggedIn={isLoggedIn} />} />
+          <Route 
+            path="/payment" 
+            element={<Payment clearCart={clearCart} />} 
+          />
+          <Route path="/login" element={<Login handleLogin={handleLogin} />} />
+        </Routes>
+      </div>
+    </Router>
+  );
+}
+
+export default App;
+
+if we orders is successfully placed the show the product details in order section where it is in profile page 
+and show order ID ,payment method, and total amount of order
