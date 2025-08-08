@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Database Connection Check</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .status {
+            padding: 15px;
+            border-radius: 5px;
+            margin: 10px 0;
+            font-weight: bold;
+        }
+        .success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        .loading {
+            background-color: #fff3cd;
+            color: #856404;
+            border: 1px solid #ffeaa7;
+        }
+        .info-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin: 20px 0;
+        }
+        .info-card {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 5px;
+            border-left: 4px solid #007bff;
+        }
+        button {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background: #0056b3;
+        }
+        .timestamp {
+            color: #666;
+            font-size: 12px;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔍 Database Connection Status</h1>
+        <p>This page checks if your MongoDB database is connected and working properly.</p>
+        
+        <div id="status" class="status loading">
+            🔄 Checking database connection...
+        </div>
+        
+        <div id="details" style="display: none;">
+            <h2>📊 Database Information</h2>
+            <div class="info-grid">
+                <div class="info-card">
+                    <h3>🔗 Connection</h3>
+                    <p id="connection-info">Loading...</p>
+                </div>
+                <div class="info-card">
+                    <h3>📦 Products</h3>
+                    <p id="products-info">Loading...</p>
+                </div>
+            </div>
+            
+            <h2>🧪 API Tests</h2>
+            <div id="api-tests">
+                <div class="info-card">
+                    <h3>Health Check</h3>
+                    <p id="health-test">Testing...</p>
+                </div>
+            </div>
+        </div>
+        
+        <button onclick="checkDatabase()">🔄 Refresh Check</button>
+        <div class="timestamp" id="timestamp"></div>
+    </div>
+
+    <script>
+        async function checkDatabase() {
+            const statusDiv = document.getElementById('status');
+            const detailsDiv = document.getElementById('details');
+            const timestampDiv = document.getElementById('timestamp');
+            
+            // Reset status
+            statusDiv.className = 'status loading';
+            statusDiv.innerHTML = '🔄 Checking database connection...';
+            detailsDiv.style.display = 'none';
+            
+            try {
+                // Test 1: Health Check
+                const healthResponse = await fetch('/api/health');
+                const healthData = await healthResponse.json();
+                document.getElementById('health-test').innerHTML = 
+                    healthData.success ? '✅ API Server: Online' : '❌ API Server: Offline';
+                
+                // Test 2: Database Status
+                const dbResponse = await fetch('/api/products/db-status');
+                const dbData = await dbResponse.json();
+                
+                if (dbData.success) {
+                    statusDiv.className = 'status success';
+                    statusDiv.innerHTML = '✅ Database Connected Successfully!';
+                    
+                    // Show details
+                    detailsDiv.style.display = 'block';
+                    
+                    // Connection info
+                    document.getElementById('connection-info').innerHTML = `
+                        <strong>Database:</strong> ${dbData.database.name}<br>
+                        <strong>Host:</strong> ${dbData.database.host}<br>
+                        <strong>Port:</strong> ${dbData.database.port}
+                    `;
+                    
+                    // Products info
+                    document.getElementById('products-info').innerHTML = `
+                        <strong>Total Products:</strong> ${dbData.collections.products.total}<br>
+                        <strong>Active Products:</strong> ${dbData.collections.products.active}<br>
+                        <strong>Categories:</strong> ${dbData.collections.products.categories.join(', ')}
+                    `;
+                    
+                } else {
+                    statusDiv.className = 'status error';
+                    statusDiv.innerHTML = '❌ Database Connection Failed!<br>' + 
+                        (dbData.database?.error || 'Unknown error');
+                }
+                
+            } catch (error) {
+                statusDiv.className = 'status error';
+                statusDiv.innerHTML = '❌ Connection Test Failed!<br>' + 
+                    'Make sure the backend server is running on port 5000';
+            }
+            
+            // Update timestamp
+            timestampDiv.innerHTML = 'Last checked: ' + new Date().toLocaleString();
+        }
+        
+        // Check on page load
+        checkDatabase();
+        
+        // Auto-refresh every 30 seconds
+        setInterval(checkDatabase, 30000);
+    </script>
+</body>
+</html>

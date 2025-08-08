@@ -3,7 +3,7 @@ import Product from './Products';
 import './HomeCss.css';
 import "./ProductsCss.css"
 
-function Home({ products = [], addToCart }) {
+function Home({ products = [] }) {
   return (
     <div className="home">
       <div className="home-interface">
@@ -14,7 +14,7 @@ function Home({ products = [], addToCart }) {
        <center><h2>Our Products</h2></center> 
         <div className="products">
           {products.map(product => (
-            <Product key={product.id} product={product} addToCart={addToCart} />
+            <Product key={product._id} product={product} />
           ))}
         </div>
       </div>
