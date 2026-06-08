@@ -3,7 +3,7 @@
 .productcart {
   width: 100%;
   min-height: 100vh;
-  background-image: url('C:\Users\appup\OneDrive\Desktop\FS\Fertilizer.js\src\images\loging_bg.jfif'); /* Add your background image here */
+  background-image: url('../images/loging_bg.jfif'); /* Add your background image here */
   background-size: cover;
   background-position: center;
   padding: 20px;
