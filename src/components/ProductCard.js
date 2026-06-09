@@ -1,44 +1,68 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { useLocation } from "react-router-dom";
 import Product from "./Products";
 import productService from "../services/productService";
+import fallbackProducts from "../data/fallbackProducts";
 import "./ProductCardCss.css"
 
+const filterProductsLocally = (products, filters) => {
+  const searchTerm = filters.search?.trim().toLowerCase();
+  let filteredProducts = [...products];
+
+  if (filters.category) {
+    filteredProducts = filteredProducts.filter((product) => product.category === filters.category);
+  }
+
+  if (searchTerm) {
+    filteredProducts = filteredProducts.filter((product) => {
+      const searchableText = `${product.name} ${product.title} ${product.description}`.toLowerCase();
+      return searchableText.includes(searchTerm);
+    });
+  }
+
+  if (filters.sort) {
+    const sortKey = filters.sort.replace("-", "");
+    const direction = filters.sort.startsWith("-") ? -1 : 1;
+    filteredProducts.sort((a, b) => {
+      if (typeof a[sortKey] === "string") {
+        return a[sortKey].localeCompare(b[sortKey]) * direction;
+      }
+      return ((a[sortKey] || 0) - (b[sortKey] || 0)) * direction;
+    });
+  }
+
+  return filteredProducts;
+};
+
 function Products({ products: initialProducts = [] }) {
-  const [products, setProducts] = useState(initialProducts);
+  const productSource = useMemo(
+    () => initialProducts.length ? initialProducts : fallbackProducts,
+    [initialProducts]
+  );
+  const [products, setProducts] = useState(productSource);
   const [loading, setLoading] = useState(false);
   const [filters, setFilters] = useState({
     category: '',
     sort: '',
     search: ''
   });
+  const { category, sort } = filters;
   const location = useLocation();
 
   // Get search params from URL
   useEffect(() => {
     const searchParams = new URLSearchParams(location.search);
-    const searchTerm = searchParams.get('search');
-    if (searchTerm) {
-      setFilters(prev => ({ ...prev, search: searchTerm }));
-      handleSearch(searchTerm);
-    } else {
-      setProducts(initialProducts);
-    }
-  }, [location.search, initialProducts]);
+    const searchTerm = searchParams.get('search') || '';
+    const categoryParam = searchParams.get('category') || category;
+    const nextFilters = { category: categoryParam, sort, search: searchTerm };
 
-  const handleSearch = async (searchTerm) => {
-    setLoading(true);
-    try {
-      const result = await productService.searchProducts(searchTerm, filters);
-      if (result.success) {
-        setProducts(result.products);
-      }
-    } catch (error) {
-      console.error('Search failed:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
+    setFilters(prev => (
+      prev.search === searchTerm && prev.category === categoryParam
+        ? prev
+        : { ...prev, search: searchTerm, category: categoryParam }
+    ));
+    setProducts(filterProductsLocally(productSource, nextFilters));
+  }, [location.search, category, sort, productSource]);
 
   const handleFilterChange = async (newFilters) => {
     setFilters(newFilters);
@@ -47,9 +71,11 @@ function Products({ products: initialProducts = [] }) {
       const result = await productService.getProducts(newFilters);
       if (result.success) {
         setProducts(result.products);
+      } else {
+        setProducts(filterProductsLocally(productSource, newFilters));
       }
     } catch (error) {
-      console.error('Filter failed:', error);
+      setProducts(filterProductsLocally(productSource, newFilters));
     } finally {
       setLoading(false);
     }
