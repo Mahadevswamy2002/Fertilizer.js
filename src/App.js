@@ -13,68 +13,30 @@ import Login from "./components/Login";
 import AboutUs from "./components/AboutUs";
 import { AuthProvider } from "./contexts/AuthContext";
 import productService from "./services/productService";
+import fallbackProducts from "./data/fallbackProducts";
 
 
 
 function App() {
-  const [products, setProducts] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [products, setProducts] = useState(fallbackProducts);
 
   // Fetch products on component mount
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        setLoading(true);
         const result = await productService.getProducts();
         if (result.success) {
           setProducts(result.products);
         } else {
-          setError(result.message);
+          setProducts(fallbackProducts);
         }
       } catch (err) {
-        setError('Failed to load products');
-      } finally {
-        setLoading(false);
+        setProducts(fallbackProducts);
       }
     };
 
     fetchProducts();
   }, []);
-
-
-  if (loading) {
-    return (
-      <div className="App">
-        <div style={{
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-          height: '100vh',
-          fontSize: '18px'
-        }}>
-          Loading...
-        </div>
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <div className="App">
-        <div style={{
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-          height: '100vh',
-          fontSize: '18px',
-          color: 'red'
-        }}>
-          Error: {error}
-        </div>
-      </div>
-    );
-  }
 
   return (
     <AuthProvider>
