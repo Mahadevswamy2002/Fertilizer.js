@@ -96,10 +96,23 @@ function Cart() {
 
   if (!isAuthenticated) {
     return (
-      <div className="cart">
-        <h1>Cart</h1>
-        <div style={{ textAlign: 'center', padding: '40px' }}>
-          <p>Please <Link to="/login">login</Link> to view your cart.</p>
+      <div className="cart-unauthenticated-container">
+        <div className="cart-unauthenticated-card">
+          <div className="cart-unauthenticated-icon-wrapper">
+            <svg className="cart-unauthenticated-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <circle cx="9" cy="21" r="1"></circle>
+              <circle cx="20" cy="21" r="1"></circle>
+              <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+            </svg>
+          </div>
+          <h2>Login to View Your Cart</h2>
+          <p>Please sign in to access your items, review active selections, and proceed to payment details.</p>
+          <Link to="/login" className="cart-login-btn">
+            Sign In Now
+          </Link>
+          <div className="cart-continue-link">
+            <Link to="/products">Or continue shopping</Link>
+          </div>
         </div>
       </div>
     );

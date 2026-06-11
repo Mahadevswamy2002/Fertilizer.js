@@ -22,7 +22,7 @@ function Home({ products = [] }) {
       <section className="home-hero">
         <div className="home-hero-content">
           <p className="home-eyebrow">Agro essentials for better yield</p>
-          <h1>Nirmala Agro Agencies</h1>
+          <h1>Agro Agencies</h1>
           <p className="home-hero-text">
             Quality fertilizers, seeds, and farm inputs selected for practical field needs.
           </p>
@@ -93,14 +93,14 @@ function Home({ products = [] }) {
 
       <section className="home-support">
         <div>
-          <span>Project highlight</span>
-          <h2>Built for a complete fertilizer store workflow</h2>
+          <span>Store highlight</span>
+          <h2>Quality agriculture inputs for your farm</h2>
           <p>
-            The system supports product browsing, authentication, cart management,
-            checkout, profile, and order features for an academic MERN stack project.
+            Established in Gundlupete in 1979, Agro Agencies provides a complete range of 
+            premium fertilizers, seeds, organic supplies, and expert support to help farmers achieve maximum yield.
           </p>
         </div>
-        <Link to="/about">About Project</Link>
+        <Link to="/about">About Us</Link>
       </section>
     </div>
   );

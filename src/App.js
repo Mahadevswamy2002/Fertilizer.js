@@ -4,6 +4,7 @@ import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import "./App.css";
 import Navbar from "./components/Navbar";
+import ScrollToTop from "./components/ScrollToTop";
 import Home from "./components/Home";
 import Products from "./components/ProductCard";
 import Cart from "./components/Cart";
@@ -14,8 +15,6 @@ import AboutUs from "./components/AboutUs";
 import { AuthProvider } from "./contexts/AuthContext";
 import productService from "./services/productService";
 import fallbackProducts from "./data/fallbackProducts";
-
-
 
 function App() {
   const [products, setProducts] = useState(fallbackProducts);
@@ -41,6 +40,7 @@ function App() {
   return (
     <AuthProvider>
       <Router>
+        <ScrollToTop />
         <div className="App">
           <Navbar />
           <Routes>
