@@ -154,11 +154,22 @@ function Cart() {
 
       <div className="cart_items">
         {cartItems.length === 0 && (
-          <div style={{ textAlign: 'center', padding: '40px' }}>
-            <p>Your cart is empty</p>
-            <Link to="/products">
-              <button style={{ marginTop: '20px' }}>Continue Shopping</button>
-            </Link>
+          <div className="cart-empty-container">
+            <div className="cart-empty-card">
+              <div className="cart-empty-icon-wrapper">
+                <svg className="cart-empty-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                  <circle cx="9" cy="21" r="1"></circle>
+                  <circle cx="20" cy="21" r="1"></circle>
+                  <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+                  <line x1="17" y1="12" x2="11" y2="12"></line>
+                </svg>
+              </div>
+              <h2>Your Cart is Empty</h2>
+              <p>Looks like you haven't added any products to your cart yet. Explore our top quality seeds and fertilizers to get started.</p>
+              <Link to="/products" className="cart-empty-shop-btn">
+                Start Shopping
+              </Link>
+            </div>
           </div>
         )}
 

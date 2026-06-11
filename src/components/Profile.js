@@ -112,24 +112,26 @@ function Profile() {
     });
   };
 
-  const getStatusColor = (status) => {
-    const colors = {
-      pending: '#ffc107',
-      confirmed: '#17a2b8',
-      processing: '#fd7e14',
-      shipped: '#6f42c1',
-      delivered: '#28a745',
-      cancelled: '#dc3545'
-    };
-    return colors[status] || '#6c757d';
+  const getInitials = (name) => {
+    if (!name) return 'U';
+    return name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2);
   };
 
   if (!isAuthenticated) {
     return (
-      <div className="profile">
-        <h1>Profile</h1>
-        <div style={{ textAlign: 'center', padding: '40px' }}>
-          <p>Please <Link to="/login">login</Link> to view your profile.</p>
+      <div className="profile-unauthenticated-container">
+        <div className="profile-unauthenticated-card">
+          <div className="profile-unauthenticated-icon-wrapper">
+            <svg className="profile-unauthenticated-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+              <circle cx="12" cy="7" r="4"></circle>
+            </svg>
+          </div>
+          <h2>Login to View Profile</h2>
+          <p>Access your personal dashboard, address book, and track active order shipments.</p>
+          <Link to="/login" className="profile-login-btn">
+            Sign In Now
+          </Link>
         </div>
       </div>
     );
@@ -137,208 +139,244 @@ function Profile() {
 
   if (loading) {
     return (
-      <div className="profile">
-        <h1>Profile</h1>
-        <div style={{ textAlign: 'center', padding: '40px' }}>Loading...</div>
+      <div className="profile-loading-container">
+        <div className="spinner"></div>
+        <p>Loading your profile details...</p>
       </div>
     );
   }
 
   return (
-    <div className="profile">
-      <h1>Profile</h1>
-
-      {/* Profile Information */}
-      <div style={{ marginBottom: '30px', padding: '20px', border: '1px solid #ddd', borderRadius: '8px' }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
-          <h2>Personal Information</h2>
-          <button
-            onClick={isEditing ? handleProfileSave : handleEditToggle}
-            style={{
-              padding: '8px 16px',
-              background: isEditing ? '#28a745' : '#007bff',
-              color: 'white',
-              border: 'none',
-              borderRadius: '4px',
-              cursor: 'pointer'
-            }}
-          >
-            {isEditing ? 'Save' : 'Edit'}
-          </button>
-        </div>
-
-        {isEditing ? (
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '15px' }}>
-            <div>
-              <label>Name:</label>
-              <input
-                type="text"
-                name="name"
-                value={profileData.name}
-                onChange={handleInputChange}
-                style={{ width: '100%', padding: '8px', marginTop: '5px', border: '1px solid #ddd', borderRadius: '4px' }}
-              />
-            </div>
-            <div>
-              <label>Phone:</label>
-              <input
-                type="tel"
-                name="phone"
-                value={profileData.phone}
-                onChange={handleInputChange}
-                style={{ width: '100%', padding: '8px', marginTop: '5px', border: '1px solid #ddd', borderRadius: '4px' }}
-              />
-            </div>
-            <div style={{ gridColumn: '1 / -1' }}>
-              <label>Email:</label>
-              <input
-                type="email"
-                value={profileData.email}
-                disabled
-                style={{ width: '100%', padding: '8px', marginTop: '5px', border: '1px solid #ddd', borderRadius: '4px', background: '#f5f5f5' }}
-              />
-              <small style={{ color: '#666' }}>Email cannot be changed</small>
-            </div>
-
-            <h3 style={{ gridColumn: '1 / -1', marginTop: '20px', marginBottom: '10px' }}>Address</h3>
-            <div style={{ gridColumn: '1 / -1' }}>
-              <label>Street:</label>
-              <input
-                type="text"
-                name="address.street"
-                value={profileData.address.street}
-                onChange={handleInputChange}
-                style={{ width: '100%', padding: '8px', marginTop: '5px', border: '1px solid #ddd', borderRadius: '4px' }}
-              />
-            </div>
-            <div>
-              <label>City:</label>
-              <input
-                type="text"
-                name="address.city"
-                value={profileData.address.city}
-                onChange={handleInputChange}
-                style={{ width: '100%', padding: '8px', marginTop: '5px', border: '1px solid #ddd', borderRadius: '4px' }}
-              />
-            </div>
-            <div>
-              <label>State:</label>
-              <input
-                type="text"
-                name="address.state"
-                value={profileData.address.state}
-                onChange={handleInputChange}
-                style={{ width: '100%', padding: '8px', marginTop: '5px', border: '1px solid #ddd', borderRadius: '4px' }}
-              />
-            </div>
-            <div>
-              <label>ZIP Code:</label>
-              <input
-                type="text"
-                name="address.zipCode"
-                value={profileData.address.zipCode}
-                onChange={handleInputChange}
-                style={{ width: '100%', padding: '8px', marginTop: '5px', border: '1px solid #ddd', borderRadius: '4px' }}
-              />
-            </div>
-            <div>
-              <label>Country:</label>
-              <input
-                type="text"
-                name="address.country"
-                value={profileData.address.country}
-                onChange={handleInputChange}
-                style={{ width: '100%', padding: '8px', marginTop: '5px', border: '1px solid #ddd', borderRadius: '4px' }}
-              />
-            </div>
-          </div>
-        ) : (
-          <div>
-            <p><strong>Name:</strong> {profileData.name || 'Not provided'}</p>
-            <p><strong>Email:</strong> {profileData.email}</p>
-            <p><strong>Phone:</strong> {profileData.phone || 'Not provided'}</p>
-            <h3 style={{ marginTop: '20px', marginBottom: '10px' }}>Address</h3>
-            {profileData.address.street ? (
-              <div>
-                <p>{profileData.address.street}</p>
-                <p>{profileData.address.city}, {profileData.address.state} {profileData.address.zipCode}</p>
-                <p>{profileData.address.country}</p>
-              </div>
-            ) : (
-              <p style={{ color: '#666' }}>No address provided</p>
-            )}
-          </div>
-        )}
+    <div className="profile-page-wrapper">
+      <div className="profile-header-section">
+        <h1>My Account</h1>
+        <p>Manage your address, contact info, and track order deliveries.</p>
       </div>
 
-      {/* Orders Section */}
-      <div>
-        <h2>My Orders</h2>
-        {orders.length > 0 ? (
-          <div className="orders">
-            {orders.map((order) => (
-              <div key={order._id} style={{
-                border: '1px solid #ddd',
-                borderRadius: '8px',
-                padding: '20px',
-                marginBottom: '20px'
-              }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '15px' }}>
-                  <h3>Order #{order.orderNumber}</h3>
-                  <span style={{
-                    padding: '4px 12px',
-                    borderRadius: '20px',
-                    background: getStatusColor(order.orderStatus),
-                    color: 'white',
-                    fontSize: '12px',
-                    textTransform: 'uppercase'
-                  }}>
-                    {order.orderStatus}
-                  </span>
+      <div className="profile-grid-container">
+        
+        {/* Left Column: Personal & Address Information */}
+        <div className="profile-left-column">
+          <div className="profile-info-card">
+            
+            {/* User Avatar Initials block */}
+            <div className="user-avatar-summary">
+              <div className="avatar-circle">
+                {getInitials(profileData.name)}
+              </div>
+              <div className="avatar-meta">
+                <h2>{profileData.name || 'Member Account'}</h2>
+                <span className="account-badge">🌾 Active Farmer Portal</span>
+              </div>
+            </div>
+
+            <div className="card-section-header">
+              <h3>Personal Details</h3>
+              <button
+                onClick={isEditing ? handleProfileSave : handleEditToggle}
+                className={`edit-save-btn ${isEditing ? 'save-mode' : 'edit-mode'}`}
+              >
+                {isEditing ? '✓ Save Changes' : '✏️ Edit Profile'}
+              </button>
+            </div>
+
+            {isEditing ? (
+              <div className="profile-form">
+                <div className="form-row">
+                  <div className="form-group-item">
+                    <label>Full Name</label>
+                    <input
+                      type="text"
+                      name="name"
+                      value={profileData.name}
+                      onChange={handleInputChange}
+                      placeholder="Enter your name"
+                      required
+                    />
+                  </div>
+                  <div className="form-group-item">
+                    <label>Phone Number</label>
+                    <input
+                      type="tel"
+                      name="phone"
+                      value={profileData.phone}
+                      onChange={handleInputChange}
+                      placeholder="10-digit phone number"
+                    />
+                  </div>
                 </div>
 
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '15px', marginBottom: '15px' }}>
-                  <p><strong>Order Date:</strong> {formatDate(order.createdAt)}</p>
-                  <p><strong>Payment Method:</strong> {order.paymentMethod.replace('_', ' ').toUpperCase()}</p>
-                  <p><strong>Total Amount:</strong> Rs.{order.totalAmount.toFixed(2)}</p>
-                  <p><strong>Items:</strong> {order.totalItems}</p>
+                <div className="form-group-item disabled-group">
+                  <label>Email Address</label>
+                  <input
+                    type="email"
+                    value={profileData.email}
+                    disabled
+                  />
+                  <small>Email address is locked and cannot be edited.</small>
                 </div>
 
-                <h4>Items:</h4>
-                <div style={{ display: 'grid', gap: '10px' }}>
-                  {order.items.map((item, idx) => (
-                    <div key={idx} style={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: '15px',
-                      padding: '10px',
-                      background: '#f8f9fa',
-                      borderRadius: '4px'
-                    }}>
-                      <img
-                        src={getProductImage(item.image)}
-                        alt={item.name}
-                        style={{ width: '60px', height: '60px', objectFit: 'cover', borderRadius: '4px' }}
+                <div className="address-section">
+                  <h4>Delivery Address</h4>
+                  <div className="form-group-item">
+                    <label>Street Address</label>
+                    <input
+                      type="text"
+                      name="address.street"
+                      value={profileData.address.street}
+                      onChange={handleInputChange}
+                      placeholder="Flat, House no., Building, Street"
+                    />
+                  </div>
+                  <div className="form-row">
+                    <div className="form-group-item">
+                      <label>City</label>
+                      <input
+                        type="text"
+                        name="address.city"
+                        value={profileData.address.city}
+                        onChange={handleInputChange}
+                        placeholder="City"
                       />
-                      <div style={{ flex: 1 }}>
-                        <h5 style={{ margin: '0 0 5px 0' }}>{item.name}</h5>
-                        <p style={{ margin: '0', color: '#666' }}>Quantity: {item.quantity}</p>
-                        <p style={{ margin: '0', fontWeight: 'bold' }}>Rs.{item.price} each</p>
-                      </div>
                     </div>
-                  ))}
+                    <div className="form-group-item">
+                      <label>State</label>
+                      <input
+                        type="text"
+                        name="address.state"
+                        value={profileData.address.state}
+                        onChange={handleInputChange}
+                        placeholder="State"
+                      />
+                    </div>
+                  </div>
+                  <div className="form-row">
+                    <div className="form-group-item">
+                      <label>ZIP / Postal Code</label>
+                      <input
+                        type="text"
+                        name="address.zipCode"
+                        value={profileData.address.zipCode}
+                        onChange={handleInputChange}
+                        placeholder="ZIP Code"
+                      />
+                    </div>
+                    <div className="form-group-item">
+                      <label>Country</label>
+                      <input
+                        type="text"
+                        name="address.country"
+                        value={profileData.address.country}
+                        onChange={handleInputChange}
+                        placeholder="Country"
+                      />
+                    </div>
+                  </div>
                 </div>
               </div>
-            ))}
+            ) : (
+              <div className="profile-display-details">
+                <div className="display-item">
+                  <span className="display-label">Email:</span>
+                  <span className="display-val">{profileData.email}</span>
+                </div>
+                <div className="display-item">
+                  <span className="display-label">Phone:</span>
+                  <span className="display-val">{profileData.phone || <em className="not-provided">Not provided</em>}</span>
+                </div>
+
+                <div className="display-address-block">
+                  <h4>Default Shipping Address</h4>
+                  {profileData.address.street ? (
+                    <div className="address-box-display">
+                      <p className="addr-street">{profileData.address.street}</p>
+                      <p className="addr-city-zip">{profileData.address.city}, {profileData.address.state} - {profileData.address.zipCode}</p>
+                      <p className="addr-country">{profileData.address.country}</p>
+                    </div>
+                  ) : (
+                    <div className="address-empty-alert">
+                      <p>No default address provided. Click 'Edit Profile' to add shipping details.</p>
+                    </div>
+                  )}
+                </div>
+              </div>
+            )}
           </div>
-        ) : (
-          <div style={{ textAlign: 'center', padding: '40px', color: '#666' }}>
-            <p>No orders placed yet.</p>
-            <Link to="/products">
-              <button style={{ marginTop: '15px', padding: '10px 20px' }}>Start Shopping</button>
-            </Link>
+        </div>
+
+        {/* Right Column: Order History */}
+        <div className="profile-right-column">
+          <div className="profile-orders-card">
+            <h2>Order History</h2>
+            {orders.length > 0 ? (
+              <div className="orders-list-wrapper">
+                {orders.map((order) => (
+                  <div key={order._id} className="order-receipt-card">
+                    
+                    <div className="order-receipt-header">
+                      <div>
+                        <span className="order-number-lbl">Order Ref</span>
+                        <h3>#{order.orderNumber}</h3>
+                      </div>
+                      <span className={`order-status-badge ${order.orderStatus.toLowerCase()}`}>
+                        {order.orderStatus}
+                      </span>
+                    </div>
+
+                    <div className="order-receipt-meta-grid">
+                      <div className="meta-cell">
+                        <span className="meta-lbl">Order Date</span>
+                        <span className="meta-val">{formatDate(order.createdAt)}</span>
+                      </div>
+                      <div className="meta-cell">
+                        <span className="meta-lbl">Payment Type</span>
+                        <span className="meta-val">{order.paymentMethod.replace('_', ' ').toUpperCase()}</span>
+                      </div>
+                      <div className="meta-cell">
+                        <span className="meta-lbl">Total Items</span>
+                        <span className="meta-val">{order.totalItems} articles</span>
+                      </div>
+                      <div className="meta-cell">
+                        <span className="meta-lbl">Total Cost</span>
+                        <span className="meta-val cost-accent">Rs.{order.totalAmount.toFixed(2)}</span>
+                      </div>
+                    </div>
+
+                    <h4 className="receipt-items-title">Purchased Items</h4>
+                    <div className="receipt-items-list">
+                      {order.items.map((item, idx) => (
+                        <div key={idx} className="receipt-item-row">
+                          <img
+                            src={getProductImage(item.image)}
+                            alt={item.name}
+                          />
+                          <div className="receipt-item-desc">
+                            <h5>{item.name}</h5>
+                            <div className="receipt-item-details-row">
+                              <span>Qty: <strong>{item.quantity}</strong></span>
+                              <span>Price: <strong>Rs.{item.price}</strong></span>
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div className="profile-orders-empty">
+                <div className="empty-orders-icon">🛒</div>
+                <h3>No Orders Found</h3>
+                <p>You haven't placed any orders yet. Visit our products catalogue to add seeds, fertilizers, or tools to your farm inputs list.</p>
+                <Link to="/products" className="start-shopping-btn">
+                  Browse Catalog
+                </Link>
+              </div>
+            )}
           </div>
-        )}
+        </div>
+
       </div>
     </div>
   );
