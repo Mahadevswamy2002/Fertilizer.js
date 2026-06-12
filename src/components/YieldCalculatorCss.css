@@ -379,3 +379,190 @@
   margin-top: 8px;
   font-weight: 500;
 }
+
+/* Soil pH Badges */
+.ph-badge {
+  font-size: 0.82rem;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 12px;
+  border: 1px solid transparent;
+}
+.ph-badge.ph-optimal {
+  background-color: #f6ffed;
+  border-color: #b7eb8f;
+  color: #389e0d;
+}
+.ph-badge.ph-acidic {
+  background-color: #fff1f0;
+  border-color: #ffa39e;
+  color: #cf1322;
+}
+.ph-badge.ph-alkaline {
+  background-color: #e6f7ff;
+  border-color: #91d5ff;
+  color: #096dd9;
+}
+
+/* pH Alert Warning Boxes */
+.calc-alert-box {
+  padding: 14px 18px;
+  border-radius: 8px;
+  border: 1px solid #ffe58f;
+  background-color: #fffbe6;
+  margin-bottom: 24px;
+  text-align: left;
+}
+.calc-alert-box strong {
+  display: block;
+  font-size: 0.9rem;
+  color: #d46b08;
+  margin-bottom: 4px;
+}
+.calc-alert-box p {
+  margin: 0;
+  font-size: 0.85rem;
+  color: #614700;
+  line-height: 1.5;
+}
+
+/* Pest Threats Checklist */
+.threats-group {
+  margin-bottom: 28px;
+}
+.threats-checklist {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  background-color: #fcfdfb;
+  border: 1px solid #edf2ed;
+  border-radius: 8px;
+  padding: 16px;
+}
+.checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #466353;
+  cursor: pointer;
+  user-select: none;
+}
+.checkbox-label input[type="checkbox"] {
+  width: 17px;
+  height: 17px;
+  accent-color: #2f7d32;
+  cursor: pointer;
+}
+
+/* ROI Financial Dashboard */
+.roi-dashboard {
+  margin-top: 24px;
+  padding: 20px;
+  background: #fbfdfa;
+  border: 1px solid #e2ebd5;
+  border-radius: 12px;
+  text-align: left;
+}
+.roi-dashboard h3 {
+  font-size: 1.05rem;
+  font-weight: 800;
+  color: #1b4332;
+  margin: 0 0 14px 0;
+  border-bottom: 1px dashed #e2ebd5;
+  padding-bottom: 8px;
+}
+.roi-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+}
+.roi-card {
+  padding: 12px;
+  background: #ffffff;
+  border: 1px solid #edf2ed;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.roi-card.net-profit-card {
+  background: #f1f7f2;
+  border-color: #c8e6c9;
+}
+.roi-label {
+  font-size: 0.76rem;
+  font-weight: 600;
+  color: #7a8c80;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+.roi-val {
+  font-size: 1.2rem;
+  font-weight: 750;
+  color: #1f2a24;
+}
+.roi-val.text-green {
+  color: #2f7d32;
+}
+.roi-val.text-red {
+  color: #c62828;
+}
+.roi-val.highlight-green {
+  color: #1b5e20;
+  font-size: 1.35rem;
+}
+
+@media (max-width: 580px) {
+  .roi-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Searchable Crop Suggestions Styles */
+.searchable-crop-group {
+  position: relative;
+}
+
+.crop-suggestions-panel {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  width: 100%;
+  max-height: 220px;
+  background-color: #ffffff;
+  border: 1px solid #c2d5c5;
+  border-radius: 8px;
+  box-shadow: 0 10px 24px rgba(46, 125, 50, 0.08);
+  overflow-y: auto;
+  z-index: 100;
+  box-sizing: border-box;
+}
+
+.crop-suggestion-item {
+  padding: 12px 16px;
+  font-size: 0.92rem;
+  color: #1f2a24;
+  text-align: left;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.crop-suggestion-item:hover {
+  background-color: #f1f5f2;
+  color: #2f7d32;
+  font-weight: 600;
+}
+
+.custom-suggestion-hint {
+  font-style: italic;
+  color: #7a8c80;
+  cursor: default;
+  background-color: #fafdfa;
+}
+.custom-suggestion-hint:hover {
+  background-color: #fafdfa;
+  color: #7a8c80;
+  font-weight: normal;
+}
