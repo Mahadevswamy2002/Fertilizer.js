@@ -1,8 +1,9 @@
 import React, { useState, useEffect, useMemo } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import Product from "./Products";
 import productService from "../services/productService";
 import fallbackProducts from "../data/fallbackProducts";
+import { useProductModal } from "../contexts/ProductModalContext";
 import "./ProductCardCss.css"
 
 const filterProductsLocally = (products, filters) => {
@@ -48,6 +49,8 @@ function Products({ products: initialProducts = [] }) {
   });
   const { category, sort } = filters;
   const location = useLocation();
+  const navigate = useNavigate();
+  const { openProductModal } = useProductModal();
 
   // Get search params from URL
   useEffect(() => {
@@ -81,49 +84,87 @@ function Products({ products: initialProducts = [] }) {
     }
   };
 
+  const handleClearFilters = () => {
+    navigate('/products');
+    handleFilterChange({ category: '', sort: '', search: '' });
+  };
+
+  const hasActiveFilters = !!(filters.category || filters.sort || filters.search);
+
   return (
     <div className="productcart">
-      <h1>Products</h1>
-
-      {/* Filter Controls */}
-      <div className="filters" style={{ margin: '20px 0', display: 'flex', gap: '15px', flexWrap: 'wrap' }}>
-        <select
-          value={filters.category}
-          onChange={(e) => handleFilterChange({ ...filters, category: e.target.value })}
-          style={{ padding: '8px', borderRadius: '4px', border: '1px solid #ccc' }}
-        >
-          <option value="">All Categories</option>
-          <option value="fertilizer">Fertilizers</option>
-          <option value="seeds">Seeds</option>
-          <option value="organic">Organic</option>
-          <option value="tools">Tools</option>
-          <option value="pesticides">Pesticides</option>
-        </select>
-
-        <select
-          value={filters.sort}
-          onChange={(e) => handleFilterChange({ ...filters, sort: e.target.value })}
-          style={{ padding: '8px', borderRadius: '4px', border: '1px solid #ccc' }}
-        >
-          <option value="">Sort By</option>
-          <option value="name">Name (A-Z)</option>
-          <option value="-name">Name (Z-A)</option>
-          <option value="price">Price (Low to High)</option>
-          <option value="-price">Price (High to Low)</option>
-          <option value="-stars">Rating (High to Low)</option>
-        </select>
+      <div className="productcart-header">
+        <h1>Our Catalog</h1>
+        <p className="productcart-subtitle">Explore high-quality agricultural essentials carefully selected for your farming success.</p>
       </div>
 
-      {loading && <div style={{ textAlign: 'center', padding: '20px' }}>Loading...</div>}
+      {/* Filter Controls */}
+      <div className="filter-bar">
+        <div className="filter-group">
+          <label htmlFor="category-select" className="filter-label">Category</label>
+          <div className="filter-select-wrapper">
+            <select
+              id="category-select"
+              className="filter-select"
+              value={filters.category}
+              onChange={(e) => handleFilterChange({ ...filters, category: e.target.value })}
+            >
+              <option value="">All Categories</option>
+              <option value="fertilizer">Fertilizers</option>
+              <option value="seeds">Seeds</option>
+              <option value="organic">Organic</option>
+              <option value="pesticides">Pesticides</option>
+            </select>
+          </div>
+        </div>
+
+        <div className="filter-group">
+          <label htmlFor="sort-select" className="filter-label">Sort By</label>
+          <div className="filter-select-wrapper">
+            <select
+              id="sort-select"
+              className="filter-select"
+              value={filters.sort}
+              onChange={(e) => handleFilterChange({ ...filters, sort: e.target.value })}
+            >
+              <option value="">Default Featured</option>
+              <option value="name">Name (A-Z)</option>
+              <option value="-name">Name (Z-A)</option>
+              <option value="price">Price (Low to High)</option>
+              <option value="-price">Price (High to Low)</option>
+              <option value="-stars">Rating (High to Low)</option>
+            </select>
+          </div>
+        </div>
+
+        {hasActiveFilters && (
+          <div className="filter-group filter-action-group">
+            <span className="filter-label" style={{ visibility: 'hidden' }}>Reset</span>
+            <button
+              type="button"
+              className="clear-filters-btn"
+              onClick={handleClearFilters}
+            >
+              Clear Filters / View All
+            </button>
+          </div>
+        )}
+      </div>
+
+      {loading && <div className="productcart-loading">Loading products...</div>}
 
       <div className="products">
         {products.map((product) => (
-          <Product key={product._id} product={product} />
+          <Product 
+            key={product._id} 
+            product={product} 
+            onProductClick={openProductModal} 
+          />
         ))}
       </div>
 
       {products.length === 0 && !loading && (
-        <div style={{ textAlign: 'center', padding: '40px', color: '#666' }}>
+        <div className="no-products">
           No products found. Try adjusting your filters.
         </div>
       )}

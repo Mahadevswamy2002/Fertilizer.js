@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import Product from './Products';
+import { useProductModal } from '../contexts/ProductModalContext';
 import fertilizerImage from '../images/urea.png';
 import seedsImage from '../images/maize_seeds.png';
 import organicImage from '../images/vermicompost.png';
@@ -9,6 +10,7 @@ import './HomeCss.css';
 import "./ProductsCss.css"
 
 function Home({ products = [] }) {
+  const { openProductModal } = useProductModal();
   const featuredProducts = products.slice(0, 6);
   const categories = [
     { name: 'Fertilizers', value: 'fertilizer', image: fertilizerImage },
@@ -86,7 +88,7 @@ function Home({ products = [] }) {
         </div>
         <div className="home-featured-grid">
           {featuredProducts.map(product => (
-            <Product key={product._id} product={product} />
+            <Product key={product._id} product={product} onProductClick={openProductModal} />
           ))}
         </div>
       </section>

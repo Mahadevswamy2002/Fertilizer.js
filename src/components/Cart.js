@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { useAuth } from '../contexts/AuthContext';
+import { useProductModal } from '../contexts/ProductModalContext';
 import cartService from '../services/cartService';
 import { getProductImage } from '../utils/imageMapper';
 import './CartCss.css';
@@ -11,6 +12,7 @@ function Cart() {
   const [loading, setLoading] = useState(true);
   const [updating, setUpdating] = useState({});
   const { isAuthenticated, updateCartCount } = useAuth();
+  const { openProductModal } = useProductModal();
 
   // Fetch cart on component mount
   useEffect(() => {
@@ -176,11 +178,18 @@ function Cart() {
         {cartItems.map((item) => (
           <div className="cart_item" key={`${item.product._id}-${item.size}`}>
             <img
+              className="product-clickable"
               src={getProductImage(item.product.image)}
               alt={item.product.name || 'Product Image'}
+              onClick={() => openProductModal(item.product)}
             />
             <div className="cart_item_details">
-              <h2>{item.product.name || 'Product Name'}</h2>
+              <h2 
+                className="product-clickable"
+                onClick={() => openProductModal(item.product)}
+              >
+                {item.product.name || 'Product Name'}
+              </h2>
               <p>{item.product.title || 'Product Title'}</p>
               <h3>Rs.{item.price || '0.00'} each</h3>
 

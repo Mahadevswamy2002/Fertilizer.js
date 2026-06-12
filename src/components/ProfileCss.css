@@ -36,6 +36,15 @@
   align-items: start;
 }
 
+@media (min-width: 981px) {
+  .profile-left-column {
+    position: sticky;
+    top: 90px;
+    align-self: start;
+  }
+}
+
+
 @media (max-width: 980px) {
   .profile-grid-container {
     grid-template-columns: 1fr;
@@ -311,10 +320,26 @@
 .orders-list-wrapper {
   display: flex;
   flex-direction: column;
-  gap: 24px;
-  max-height: 700px;
+  gap: 16px;
+  max-height: 520px; /* Reduced to fit viewport nicely and prevent page stretching */
   overflow-y: auto;
   padding-right: 8px;
+}
+
+/* Custom Scrollbar for orders list */
+.orders-list-wrapper::-webkit-scrollbar {
+  width: 6px;
+}
+.orders-list-wrapper::-webkit-scrollbar-track {
+  background: #f1f5f2;
+  border-radius: 4px;
+}
+.orders-list-wrapper::-webkit-scrollbar-thumb {
+  background: #c8d3cc;
+  border-radius: 4px;
+}
+.orders-list-wrapper::-webkit-scrollbar-thumb:hover {
+  background: #a2b4a8;
 }
 
 .order-receipt-card {
@@ -323,20 +348,101 @@
   border-radius: 12px;
   padding: 20px;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.02);
-  transition: border-color 0.25s ease;
+  transition: all 0.25s ease;
 }
 
 .order-receipt-card:hover {
   border-color: #c2d5c5;
+  box-shadow: 0 6px 20px rgba(27, 67, 50, 0.03);
 }
 
 .order-receipt-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  transition: all 0.2s ease;
+}
+
+.clickable-header {
+  cursor: pointer;
+  user-select: none;
+}
+
+.order-receipt-card.expanded .order-receipt-header {
   padding-bottom: 14px;
   border-bottom: 1px solid #f8faf6;
   margin-bottom: 14px;
+}
+
+.header-left {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  text-align: left;
+}
+
+.order-date-subtitle {
+  font-size: 12px;
+  color: #749684;
+  font-weight: 500;
+}
+
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.order-summary-right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 4px;
+}
+
+.order-total-price {
+  font-weight: 800;
+  color: #2f7d32;
+  font-size: 15px;
+}
+
+.order-collapse-toggle {
+  background: #f1f5f2;
+  border: 1px solid #e1e8e4;
+  cursor: pointer;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #466353;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  border-radius: 50%;
+}
+
+.order-collapse-toggle:hover {
+  background-color: #e8f5e9;
+  color: #2f7d32;
+  border-color: #c2d5c5;
+}
+
+.order-collapse-toggle.rotate {
+  transform: rotate(180deg);
+}
+
+.order-receipt-expanded-body {
+  animation: bodySlideDown 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes bodySlideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .order-number-lbl {
@@ -351,7 +457,7 @@
   font-size: 16px;
   color: #1b4332;
   font-weight: 800;
-  margin: 2px 0 0 0;
+  margin: 0;
 }
 
 /* Order Status Badges */
@@ -629,6 +735,180 @@
     opacity: 0;
   }
   to {
+    opacity: 1;
+  }
+}
+
+/* Order receipt shipping display */
+.order-receipt-shipping {
+  margin-top: 16px;
+  background-color: #f7f9f6;
+  border: 1px solid #edf1eb;
+  border-radius: 8px;
+  padding: 12px 16px;
+  margin-bottom: 16px;
+}
+
+.shipping-title-lbl {
+  font-size: 11px;
+  font-weight: 700;
+  color: #749684;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  display: block;
+  margin-bottom: 4px;
+}
+
+.shipping-addr-text {
+  margin: 0;
+  font-size: 13px;
+  color: #3b4e43;
+  line-height: 1.45;
+}
+
+.shipping-addr-text strong {
+  color: #1f2a24;
+}
+
+/* Cancel order action */
+.order-receipt-actions {
+  margin-top: 16px;
+  text-align: right;
+  border-top: 1px dashed #edf2ed;
+  padding-top: 14px;
+}
+
+.cancel-order-btn {
+  background-color: #ffffff;
+  color: #d03a3a;
+  border: 1px solid #f3d4d4;
+  border-radius: 6px;
+  padding: 8px 16px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.cancel-order-btn:hover {
+  background-color: #fdf2f2;
+  border-color: #d03a3a;
+}
+
+.cancel-order-btn:active {
+  background-color: #fce8e8;
+}
+
+/* Cancel Modal Overlay */
+.cancel-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(4px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  animation: fadeIn 0.2s ease-out;
+}
+
+/* Modal Card */
+.cancel-modal-card {
+  background-color: #ffffff;
+  border-radius: 14px;
+  padding: 30px;
+  max-width: 440px;
+  width: 90%;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.12);
+  border: 1px solid #edf2ed;
+  text-align: center;
+  box-sizing: border-box;
+  animation: scaleUp 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.cancel-modal-icon {
+  font-size: 32px;
+  margin-bottom: 15px;
+}
+
+.cancel-modal-card h3 {
+  font-size: 1.4rem;
+  color: #1b4332;
+  margin: 0 0 12px 0;
+  font-weight: 800;
+}
+
+.cancel-modal-text {
+  font-size: 0.95rem;
+  color: #2f3e35;
+  line-height: 1.5;
+  margin: 0 0 10px 0;
+}
+
+.cancel-modal-warn {
+  font-size: 0.8rem;
+  color: #8c7324;
+  background-color: #fffdeb;
+  padding: 8px 12px;
+  border-radius: 6px;
+  border: 1px solid #f6ecb3;
+  margin: 0 0 25px 0;
+  line-height: 1.4;
+}
+
+/* Modal Action Buttons */
+.cancel-modal-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+}
+
+.confirm-cancel-btn {
+  background-color: #d03a3a;
+  color: #ffffff;
+  border: none;
+  border-radius: 8px;
+  padding: 11px 20px;
+  font-size: 0.92rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s;
+  box-shadow: 0 2px 6px rgba(208, 58, 58, 0.15);
+}
+
+.confirm-cancel-btn:hover {
+  background-color: #a62626;
+  box-shadow: 0 4px 12px rgba(208, 58, 58, 0.25);
+}
+
+.close-cancel-btn {
+  background-color: #ffffff;
+  color: #53645b;
+  border: 1px solid #c8d3cc;
+  border-radius: 8px;
+  padding: 11px 20px;
+  font-size: 0.92rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.close-cancel-btn:hover {
+  background-color: #f7faf6;
+  color: #1b4332;
+  border-color: #a8bfae;
+}
+
+@keyframes scaleUp {
+  from {
+    transform: scale(0.92);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
     opacity: 1;
   }
 }

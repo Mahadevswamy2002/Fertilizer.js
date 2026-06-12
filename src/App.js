@@ -13,6 +13,7 @@ import Payment from "./components/Payment";
 import Login from "./components/Login";
 import AboutUs from "./components/AboutUs";
 import { AuthProvider } from "./contexts/AuthContext";
+import { ProductModalProvider } from "./contexts/ProductModalContext";
 import productService from "./services/productService";
 import fallbackProducts from "./data/fallbackProducts";
 
@@ -39,32 +40,34 @@ function App() {
 
   return (
     <AuthProvider>
-      <Router>
-        <ScrollToTop />
-        <div className="App">
-          <Navbar />
-          <Routes>
-            <Route path="/" element={<Home products={products} />} />
-            <Route path="/products" element={<Products products={products} />} />
-            <Route path="/cart" element={<Cart />} />
-            <Route path="/profile" element={<Profile />} />
-            <Route path="/payment" element={<Payment />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/about" element={<AboutUs />} />
-          </Routes>
-          <ToastContainer
-            position="top-right"
-            autoClose={3000}
-            hideProgressBar={false}
-            newestOnTop={false}
-            closeOnClick
-            rtl={false}
-            pauseOnFocusLoss
-            draggable
-            pauseOnHover
-          />
-        </div>
-      </Router>
+      <ProductModalProvider>
+        <Router>
+          <ScrollToTop />
+          <div className="App">
+            <Navbar />
+            <Routes>
+              <Route path="/" element={<Home products={products} />} />
+              <Route path="/products" element={<Products products={products} />} />
+              <Route path="/cart" element={<Cart />} />
+              <Route path="/profile" element={<Profile />} />
+              <Route path="/payment" element={<Payment />} />
+              <Route path="/login" element={<Login />} />
+              <Route path="/about" element={<AboutUs />} />
+            </Routes>
+            <ToastContainer
+              position="top-right"
+              autoClose={3000}
+              hideProgressBar={false}
+              newestOnTop={false}
+              closeOnClick
+              rtl={false}
+              pauseOnFocusLoss
+              draggable
+              pauseOnHover
+            />
+          </div>
+        </Router>
+      </ProductModalProvider>
     </AuthProvider>
   );
 }

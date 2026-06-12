@@ -2,15 +2,20 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { useAuth } from '../contexts/AuthContext';
+import { useProductModal } from '../contexts/ProductModalContext';
 import userService from '../services/userService';
 import orderService from '../services/orderService';
 import { getProductImage } from '../utils/imageMapper';
 import "./ProfileCss.css"
 
 function Profile() {
+  const { openProductModal } = useProductModal();
   const [isEditing, setIsEditing] = useState(false);
   const [loading, setLoading] = useState(true);
   const [orders, setOrders] = useState([]);
+  const [expandedOrders, setExpandedOrders] = useState({});
+  const [cancelModalOpen, setCancelModalOpen] = useState(false);
+  const [orderToCancel, setOrderToCancel] = useState(null);
   const [profileData, setProfileData] = useState({
     name: '',
     email: '',
@@ -24,6 +29,13 @@ function Profile() {
     }
   });
   const { user, isAuthenticated, updateUser } = useAuth();
+
+  const toggleOrderExpand = (orderId) => {
+    setExpandedOrders(prev => ({
+      ...prev,
+      [orderId]: !prev[orderId]
+    }));
+  };
 
   // Fetch user profile and orders
   useEffect(() => {
@@ -55,6 +67,9 @@ function Profile() {
         const ordersResult = await orderService.getOrders();
         if (ordersResult.success) {
           setOrders(ordersResult.orders);
+          if (ordersResult.orders.length > 0) {
+            setExpandedOrders({ [ordersResult.orders[0]._id]: true });
+          }
         }
       } catch (error) {
         toast.error('Failed to load profile data');
@@ -102,6 +117,39 @@ function Profile() {
     } catch (error) {
       toast.error('Failed to update profile');
     }
+  };
+
+  const triggerCancelConfirmation = (orderId) => {
+    setOrderToCancel(orderId);
+    setCancelModalOpen(true);
+  };
+
+  const confirmCancelOrder = async () => {
+    if (!orderToCancel) return;
+
+    try {
+      const result = await orderService.cancelOrder(orderToCancel);
+      if (result.success) {
+        toast.success("Order cancelled successfully");
+        setOrders(prev => prev.map(order => 
+          order._id === orderToCancel ? { ...order, orderStatus: 'cancelled' } : order
+        ));
+      } else {
+        toast.error(result.message || "Failed to cancel order");
+      }
+    } catch (error) {
+      toast.error("Failed to cancel order");
+    } finally {
+      setCancelModalOpen(false);
+      setOrderToCancel(null);
+    }
+  };
+
+  const getDisplayStatus = (status, paymentMethod) => {
+    if (status.toLowerCase() === 'pending') {
+      return 'Pending Payment Verification';
+    }
+    return status.charAt(0).toUpperCase() + status.slice(1);
   };
 
   const formatDate = (dateString) => {
@@ -310,59 +358,110 @@ function Profile() {
             <h2>Order History</h2>
             {orders.length > 0 ? (
               <div className="orders-list-wrapper">
-                {orders.map((order) => (
-                  <div key={order._id} className="order-receipt-card">
-                    
-                    <div className="order-receipt-header">
-                      <div>
-                        <span className="order-number-lbl">Order Ref</span>
-                        <h3>#{order.orderNumber}</h3>
+                {orders.map((order) => {
+                  const isExpanded = !!expandedOrders[order._id];
+                  return (
+                    <div key={order._id} className={`order-receipt-card ${isExpanded ? 'expanded' : 'collapsed'}`}>
+                      
+                      <div className="order-receipt-header clickable-header" onClick={() => toggleOrderExpand(order._id)}>
+                        <div className="header-left">
+                          <span className="order-number-lbl">Order Ref</span>
+                          <h3>#{order.orderNumber}</h3>
+                          <span className="order-date-subtitle">{formatDate(order.createdAt)}</span>
+                        </div>
+                        <div className="header-right">
+                          <div className="order-summary-right">
+                            <span className="order-total-price">Rs.{order.totalAmount.toFixed(2)}</span>
+                            <span className={`order-status-badge ${order.orderStatus.toLowerCase()}`}>
+                              {getDisplayStatus(order.orderStatus, order.paymentMethod)}
+                            </span>
+                          </div>
+                          <button 
+                            type="button" 
+                            className={`order-collapse-toggle ${isExpanded ? 'rotate' : ''}`}
+                            aria-label={isExpanded ? "Collapse details" : "Expand details"}
+                          >
+                            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                              <polyline points="6 9 12 15 18 9"></polyline>
+                            </svg>
+                          </button>
+                        </div>
                       </div>
-                      <span className={`order-status-badge ${order.orderStatus.toLowerCase()}`}>
-                        {order.orderStatus}
-                      </span>
-                    </div>
 
-                    <div className="order-receipt-meta-grid">
-                      <div className="meta-cell">
-                        <span className="meta-lbl">Order Date</span>
-                        <span className="meta-val">{formatDate(order.createdAt)}</span>
-                      </div>
-                      <div className="meta-cell">
-                        <span className="meta-lbl">Payment Type</span>
-                        <span className="meta-val">{order.paymentMethod.replace('_', ' ').toUpperCase()}</span>
-                      </div>
-                      <div className="meta-cell">
-                        <span className="meta-lbl">Total Items</span>
-                        <span className="meta-val">{order.totalItems} articles</span>
-                      </div>
-                      <div className="meta-cell">
-                        <span className="meta-lbl">Total Cost</span>
-                        <span className="meta-val cost-accent">Rs.{order.totalAmount.toFixed(2)}</span>
-                      </div>
-                    </div>
-
-                    <h4 className="receipt-items-title">Purchased Items</h4>
-                    <div className="receipt-items-list">
-                      {order.items.map((item, idx) => (
-                        <div key={idx} className="receipt-item-row">
-                          <img
-                            src={getProductImage(item.image)}
-                            alt={item.name}
-                          />
-                          <div className="receipt-item-desc">
-                            <h5>{item.name}</h5>
-                            <div className="receipt-item-details-row">
-                              <span>Qty: <strong>{item.quantity}</strong></span>
-                              <span>Price: <strong>Rs.{item.price}</strong></span>
+                      {isExpanded && (
+                        <div className="order-receipt-expanded-body">
+                          <div className="order-receipt-meta-grid">
+                            <div className="meta-cell">
+                              <span className="meta-lbl">Order Date</span>
+                              <span className="meta-val">{formatDate(order.createdAt)}</span>
+                            </div>
+                            <div className="meta-cell">
+                              <span className="meta-lbl">Payment Type</span>
+                              <span className="meta-val">{order.paymentMethod.replace('_', ' ').toUpperCase()}</span>
+                            </div>
+                            <div className="meta-cell">
+                              <span className="meta-lbl">Total Items</span>
+                              <span className="meta-val">{order.totalItems} articles</span>
+                            </div>
+                            <div className="meta-cell">
+                              <span className="meta-lbl">Total Cost</span>
+                              <span className="meta-val cost-accent">Rs.{order.totalAmount.toFixed(2)}</span>
                             </div>
                           </div>
-                        </div>
-                      ))}
-                    </div>
 
-                  </div>
-                ))}
+                          {order.shippingAddress && (
+                            <div className="order-receipt-shipping">
+                              <span className="shipping-title-lbl">Delivery Address</span>
+                              <p className="shipping-addr-text">
+                                <strong>{order.shippingAddress.name}</strong> • {order.shippingAddress.phone}<br/>
+                                {order.shippingAddress.street}, {order.shippingAddress.city}, {order.shippingAddress.state} - {order.shippingAddress.zipCode}
+                              </p>
+                            </div>
+                          )}
+
+                          <h4 className="receipt-items-title">Purchased Items</h4>
+                          <div className="receipt-items-list">
+                            {order.items.map((item, idx) => (
+                              <div key={idx} className="receipt-item-row">
+                                <img
+                                  className="product-clickable"
+                                  src={getProductImage(item.image)}
+                                  alt={item.name}
+                                  onClick={() => openProductModal(item)}
+                                />
+                                <div className="receipt-item-desc">
+                                  <h5 
+                                    className="product-clickable"
+                                    onClick={() => openProductModal(item)}
+                                  >
+                                    {item.name}
+                                  </h5>
+                                  <div className="receipt-item-details-row">
+                                    <span>Qty: <strong>{item.quantity}</strong></span>
+                                    <span>Price: <strong>Rs.{item.price}</strong></span>
+                                  </div>
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+
+                          {['pending', 'confirmed', 'processing'].includes(order.orderStatus.toLowerCase()) && (
+                            <div className="order-receipt-actions">
+                              <button
+                                type="button"
+                                className="cancel-order-btn"
+                                onClick={() => triggerCancelConfirmation(order._id)}
+                              >
+                                Cancel Order
+                              </button>
+                            </div>
+                          )}
+                        </div>
+                      )}
+
+                    </div>
+                  );
+                })}
               </div>
             ) : (
               <div className="profile-orders-empty">
@@ -378,6 +477,27 @@ function Profile() {
         </div>
 
       </div>
+
+      {cancelModalOpen && (
+        <div className="cancel-modal-overlay" onClick={() => setCancelModalOpen(false)}>
+          <div className="cancel-modal-card" onClick={(e) => e.stopPropagation()}>
+            <div className="cancel-modal-icon">⚠️</div>
+            <h3>Cancel Order</h3>
+            <p className="cancel-modal-text">
+              Are you sure you want to cancel order <strong>#{orders.find(o => o._id === orderToCancel)?.orderNumber}</strong>?
+            </p>
+            <p className="cancel-modal-warn">This action cannot be undone and will restore the items back into inventory.</p>
+            <div className="cancel-modal-actions">
+              <button className="confirm-cancel-btn" onClick={confirmCancelOrder}>
+                Yes, Cancel Order
+              </button>
+              <button className="close-cancel-btn" onClick={() => setCancelModalOpen(false)}>
+                No, Keep Order
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
