@@ -11,6 +11,7 @@ function Cart() {
   const [cart, setCart] = useState(null);
   const [loading, setLoading] = useState(true);
   const [updating, setUpdating] = useState({});
+  const [clearModalOpen, setClearModalOpen] = useState(false);
   const { isAuthenticated, updateCartCount } = useAuth();
   const { openProductModal } = useProductModal();
 
@@ -76,23 +77,26 @@ function Cart() {
     }
   };
 
-  const handleClearCart = async () => {
-    if (window.confirm('Are you sure you want to clear your cart?')) {
-      setLoading(true);
-      try {
-        const result = await cartService.clearCart();
-        if (result.success) {
-          setCart(result.cart);
-          updateCartCount();
-          toast.success('Cart cleared');
-        } else {
-          toast.error('Failed to clear cart');
-        }
-      } catch (error) {
+  const handleClearCartClick = () => {
+    setClearModalOpen(true);
+  };
+
+  const handleClearCartConfirm = async () => {
+    setClearModalOpen(false);
+    setLoading(true);
+    try {
+      const result = await cartService.clearCart();
+      if (result.success) {
+        setCart(result.cart);
+        updateCartCount();
+        toast.success('Cart cleared');
+      } else {
         toast.error('Failed to clear cart');
-      } finally {
-        setLoading(false);
       }
+    } catch (error) {
+      toast.error('Failed to clear cart');
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -139,7 +143,7 @@ function Cart() {
       {cartItems.length > 0 && (
         <div style={{ textAlign: 'right', marginBottom: '20px' }}>
           <button
-            onClick={handleClearCart}
+            onClick={handleClearCartClick}
             style={{
               background: '#dc3545',
               color: 'white',
@@ -251,6 +255,20 @@ function Cart() {
               Proceed to Payment
             </button>
           </Link>
+        </div>
+      )}
+      {clearModalOpen && (
+        <div className="clear-modal-overlay" onClick={() => setClearModalOpen(false)}>
+          <div className="clear-modal-card" onClick={(e) => e.stopPropagation()}>
+            <div className="clear-modal-icon">🗑️</div>
+            <h3>Clear Shopping Cart</h3>
+            <p className="clear-modal-text">Are you sure you want to remove all items from your cart?</p>
+            <p className="clear-modal-warn">This action cannot be undone. You will lose all your currently selected items and quantities.</p>
+            <div className="clear-modal-actions">
+              <button className="confirm-clear-btn" onClick={handleClearCartConfirm}>Yes, Clear Cart</button>
+              <button className="close-clear-btn" onClick={() => setClearModalOpen(false)}>No, Keep Items</button>
+            </div>
+          </div>
         </div>
       )}
     </div>

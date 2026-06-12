@@ -41,6 +41,11 @@ function Navbar() {
           <NavLink to="/products" className={({ isActive }) => isActive ? "nav-item active" : "nav-item"}>
             Products
           </NavLink>
+        </li>
+        <li>
+          <NavLink to="/calculator" className={({ isActive }) => isActive ? "nav-item active" : "nav-item"}>
+            Yield Planner
+          </NavLink>
         </li>         
         <li className="cart-badge-container">
           <NavLink to="/cart" className={({ isActive }) => isActive ? "nav-item active cart-link" : "nav-item cart-link"}>

@@ -1,0 +1,381 @@
+/* YieldCalculatorCss.css */
+
+.calculator-page {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  background-color: #f5f8f1;
+  color: #1f2a24;
+  min-height: 100vh;
+  padding: 40px 7vw;
+  box-sizing: border-box;
+}
+
+/* Header Section */
+.calculator-header {
+  text-align: center;
+  max-width: 800px;
+  margin: 0 auto 36px auto;
+}
+
+.calculator-header h1 {
+  font-size: 2.2rem;
+  font-weight: 800;
+  color: #1b4332;
+  margin: 0 0 8px 0;
+  letter-spacing: -0.02em;
+}
+
+.calculator-subtitle {
+  font-size: 1.05rem;
+  color: #53645b;
+  margin: 0;
+  line-height: 1.5;
+}
+
+/* Layout Columns */
+.calculator-layout {
+  display: grid;
+  grid-template-columns: 1fr 1.2fr;
+  gap: 36px;
+  max-width: 1100px;
+  margin: 0 auto;
+  align-items: start;
+}
+
+@media (max-width: 900px) {
+  .calculator-layout {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+}
+
+/* Card Styling */
+.calculator-input-card,
+.calculator-output-card {
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 32px;
+  box-shadow: 0 8px 30px rgba(27, 67, 50, 0.04);
+  border: 1px solid #dce6dc;
+  box-sizing: border-box;
+}
+
+.calculator-input-card h2,
+.calculator-output-card h2 {
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: #1b4332;
+  margin: 0 0 24px 0;
+  border-bottom: 2px solid #f3f7f1;
+  padding-bottom: 12px;
+}
+
+/* Inputs Form Elements */
+.calc-form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 24px;
+}
+
+.calc-form-group label {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: #466353;
+  text-align: left;
+}
+
+.calc-select {
+  padding: 12px 16px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #1f2a24;
+  background-color: #f7faf6;
+  border: 1px solid #c2d5c5;
+  border-radius: 8px;
+  outline: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.calc-select:focus {
+  border-color: #2f7d32;
+  box-shadow: 0 0 0 3px rgba(47, 125, 50, 0.1);
+  background-color: #ffffff;
+}
+
+/* Sliders */
+.calc-label-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.acreage-badge {
+  background-color: #edf7ed;
+  color: #2f7d32;
+  font-size: 0.85rem;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 12px;
+  border: 1px solid #c2d5c5;
+}
+
+.calc-slider {
+  -webkit-appearance: none;
+  width: 100%;
+  height: 6px;
+  border-radius: 3px;
+  background: #edf1eb;
+  outline: none;
+  margin: 10px 0;
+}
+
+.calc-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #2f7d32;
+  cursor: pointer;
+  border: 2px solid #ffffff;
+  box-shadow: 0 2px 6px rgba(47, 125, 50, 0.3);
+  transition: transform 0.1s;
+}
+
+.calc-slider::-webkit-slider-thumb:hover {
+  transform: scale(1.15);
+}
+
+.slider-limits {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.78rem;
+  color: #8fa89b;
+  font-weight: 600;
+}
+
+/* Crop info details */
+.crop-info-panel {
+  background-color: #fcfdfb;
+  border: 1px solid #edf2ed;
+  border-radius: 10px;
+  padding: 18px;
+  margin-top: 28px;
+  text-align: left;
+}
+
+.crop-info-panel h3 {
+  font-size: 0.95rem;
+  font-weight: 800;
+  color: #1b4332;
+  margin: 0 0 8px 0;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.crop-info-panel p {
+  font-size: 0.88rem;
+  color: #53645b;
+  line-height: 1.5;
+  margin: 0 0 14px 0;
+}
+
+.yield-estimate {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.85rem;
+  padding-top: 10px;
+  border-top: 1px dashed #e2ebd5;
+}
+
+.yield-estimate strong {
+  color: #1b4332;
+}
+
+.yield-estimate span {
+  color: #2f7d32;
+  font-weight: 700;
+}
+
+/* Recommendations list */
+.calc-loader {
+  padding: 40px;
+  font-weight: 600;
+  color: #2f7d32;
+  text-align: center;
+}
+
+.recommendations-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.rec-item-row {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 14px;
+  background-color: #fcfdfb;
+  border: 1px solid #edf2ed;
+  border-radius: 12px;
+  transition: all 0.2s ease;
+}
+
+.rec-item-row:hover {
+  border-color: #c2d5c5;
+}
+
+.rec-image-wrapper {
+  width: 52px;
+  height: 52px;
+  border-radius: 8px;
+  background-color: #f7faf6;
+  overflow: hidden;
+  border: 1px solid #edf2ed;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.rec-image-wrapper img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.fallback-img-box {
+  font-size: 20px;
+}
+
+.rec-details {
+  flex: 1;
+  text-align: left;
+}
+
+.rec-details h3 {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #1f2a24;
+  margin: 0 0 2px 0;
+}
+
+.rec-type-badge {
+  display: inline-block;
+  font-size: 0.68rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: #749684;
+  background-color: #f1f5f2;
+  padding: 2px 6px;
+  border-radius: 4px;
+  letter-spacing: 0.5px;
+  margin-bottom: 6px;
+}
+
+.rec-specs {
+  display: flex;
+  gap: 12px;
+  font-size: 0.78rem;
+  color: #53645b;
+}
+
+.stock-warning {
+  color: #c62828;
+  font-weight: 600;
+}
+
+.rec-pricing {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 4px;
+}
+
+.rec-qty {
+  font-size: 0.8rem;
+  color: #53645b;
+}
+
+.rec-qty strong {
+  color: #1f2a24;
+}
+
+.rec-subtotal {
+  font-size: 0.95rem;
+  font-weight: 750;
+  color: #2f7d32;
+}
+
+/* Cost Summary */
+.calc-cost-summary {
+  margin-top: 12px;
+  border-top: 2px solid #f3f7f1;
+  padding-top: 20px;
+  text-align: right;
+}
+
+.summary-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.9rem;
+  color: #53645b;
+  margin-bottom: 8px;
+}
+
+.summary-row.total-row {
+  margin-bottom: 24px;
+}
+
+.summary-row.total-row span:first-child {
+  font-size: 1.05rem;
+  font-weight: 800;
+  color: #1b4332;
+}
+
+.total-amount {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: #2f7d32;
+}
+
+.calc-submit-btn {
+  width: 100%;
+  background-color: #2f7d32;
+  color: #ffffff;
+  border: none;
+  padding: 14px 28px;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  box-shadow: 0 4px 12px rgba(47, 125, 50, 0.2);
+}
+
+.calc-submit-btn:hover:not(:disabled) {
+  background-color: #1b4332;
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(27, 67, 50, 0.3);
+}
+
+.calc-submit-btn:active:not(:disabled) {
+  transform: translateY(1px);
+}
+
+.calc-submit-btn:disabled {
+  background-color: #b2c2b7;
+  color: #ffffff;
+  box-shadow: none;
+  cursor: not-allowed;
+}
+
+.cart-hint {
+  display: block;
+  text-align: center;
+  font-size: 0.78rem;
+  color: #8fa89b;
+  margin-top: 8px;
+  font-weight: 500;
+}

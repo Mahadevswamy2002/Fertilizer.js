@@ -12,6 +12,7 @@ import Profile from "./components/Profile";
 import Payment from "./components/Payment";
 import Login from "./components/Login";
 import AboutUs from "./components/AboutUs";
+import YieldCalculator from "./components/YieldCalculator";
 import { AuthProvider } from "./contexts/AuthContext";
 import { ProductModalProvider } from "./contexts/ProductModalContext";
 import productService from "./services/productService";
@@ -53,6 +54,7 @@ function App() {
               <Route path="/payment" element={<Payment />} />
               <Route path="/login" element={<Login />} />
               <Route path="/about" element={<AboutUs />} />
+              <Route path="/calculator" element={<YieldCalculator />} />
             </Routes>
             <ToastContainer
               position="top-right"
