@@ -1,10 +1,10 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import Product from './Products';
-import fertilizerImage from '../images/fertilizer1.png';
-import seedsImage from '../images/fertilizer9.jpeg';
-import organicImage from '../images/fertilizer3.png';
-import pesticidesImage from '../images/fertilizer6.png';
+import fertilizerImage from '../images/urea.png';
+import seedsImage from '../images/maize_seeds.png';
+import organicImage from '../images/vermicompost.png';
+import pesticidesImage from '../images/neem_oil.png';
 import './HomeCss.css';
 import "./ProductsCss.css"
 
@@ -34,8 +34,8 @@ function Home({ products = [] }) {
 
         <div className="home-hero-panel">
           <span>Trusted by farmers</span>
-          <strong>12+</strong>
-          <p>Demo products across fertilizer, seed, and organic categories.</p>
+          <strong>20</strong>
+          <p>Premium products across fertilizers, seeds, organic, and pesticides categories.</p>
         </div>
       </section>
 

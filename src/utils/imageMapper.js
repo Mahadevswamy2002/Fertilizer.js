@@ -1,49 +1,72 @@
-// Import all images
-import fertilizer1 from "../images/fertilizer1.png";
-import fertilizer2 from "../images/fertilizer2.png";
-import fertilizer3 from "../images/fertilizer3.png";
-import fertilizer4 from "../images/fertilizer4.png";
-import fertilizer5 from "../images/fertilizer5.png";
-import fertilizer6 from "../images/fertilizer6.png";
-import fertilizer7 from "../images/fertilizer7.png";
-import fertilizer8 from "../images/fertilizer8.png";
-import fertilizer9 from "../images/fertilizer9.jpeg";
-import fertilizer10 from "../images/fertilizer10.jpeg";
-import fertilizer11 from "../images/fertilizer11.jpeg";
-import fertilizer12 from "../images/fertilizer12.jpeg";
+// Import all new images
+import urea from "../images/urea.png";
+import dap from "../images/dap.png";
+import npk from "../images/npk.png";
+import mop from "../images/mop.png";
+import ssp from "../images/ssp.png";
+import maizeSeeds from "../images/maize_seeds.png";
+import basmatiSeeds from "../images/basmati_seeds.png";
+import cottonSeeds from "../images/cotton_seeds.png";
+import wheatSeeds from "../images/wheat_seeds.png";
+import tomatoSeeds from "../images/tomato_seeds.png";
+import vermicompost from "../images/vermicompost.png";
+import neemCake from "../images/neem_cake.png";
+import boneMeal from "../images/bone_meal.png";
+import bioNpk from "../images/bio_npk.png";
+import cowDung from "../images/cow_dung.png";
+import neemOil from "../images/neem_oil.png";
+import imidacloprid from "../images/imidacloprid.png";
 
 // Create image mapping
 const imageMap = {
-  "fertilizer1.png": fertilizer1,
-  "fertilizer2.png": fertilizer2,
-  "fertilizer3.png": fertilizer3,
-  "fertilizer4.png": fertilizer4,
-  "fertilizer5.png": fertilizer5,
-  "fertilizer6.png": fertilizer6,
-  "fertilizer7.png": fertilizer7,
-  "fertilizer8.png": fertilizer8,
-  "fertilizer9.jpeg": fertilizer9,
-  "fertilizer10.jpeg": fertilizer10,
-  "fertilizer11.jpeg": fertilizer11,
-  "fertilizer12.jpeg": fertilizer12,
+  "urea.png": urea,
+  "dap.png": dap,
+  "npk.png": npk,
+  "mop.png": mop,
+  "ssp.png": ssp,
+  "maize_seeds.png": maizeSeeds,
+  "basmati_seeds.png": basmatiSeeds,
+  "cotton_seeds.png": cottonSeeds,
+  "wheat_seeds.png": wheatSeeds,
+  "tomato_seeds.png": tomatoSeeds,
+  "vermicompost.png": vermicompost,
+  "neem_cake.png": neemCake,
+  "bone_meal.png": boneMeal,
+  "bio_npk.png": bioNpk,
+  "cow_dung.png": cowDung,
+  "neem_oil.png": neemOil,
+  "imidacloprid.png": imidacloprid,
   
-  // Fallback paths (in case database has different formats)
-  "/images/fertilizer1.png": fertilizer1,
-  "/images/fertilizer2.png": fertilizer2,
-  "/images/fertilizer3.png": fertilizer3,
-  "/images/fertilizer4.png": fertilizer4,
-  "/images/fertilizer5.png": fertilizer5,
-  "/images/fertilizer6.png": fertilizer6,
-  "/images/fertilizer7.png": fertilizer7,
-  "/images/fertilizer8.png": fertilizer8,
-  "/images/fertilizer9.jpeg": fertilizer9,
-  "/images/fertilizer10.jpeg": fertilizer10,
-  "/images/fertilizer11.jpeg": fertilizer11,
-  "/images/fertilizer12.jpeg": fertilizer12,
+  // Mapped/fallback pesticide images (due to API quota constraints)
+  "chlorpyrifos.png": imidacloprid,
+  "glyphosate.png": neemOil,
+  "copper_oxychloride.png": imidacloprid,
+
+  // Fallback paths (in case database has leading slashes)
+  "/images/urea.png": urea,
+  "/images/dap.png": dap,
+  "/images/npk.png": npk,
+  "/images/mop.png": mop,
+  "/images/ssp.png": ssp,
+  "/images/maize_seeds.png": maizeSeeds,
+  "/images/basmati_seeds.png": basmatiSeeds,
+  "/images/cotton_seeds.png": cottonSeeds,
+  "/images/wheat_seeds.png": wheatSeeds,
+  "/images/tomato_seeds.png": tomatoSeeds,
+  "/images/vermicompost.png": vermicompost,
+  "/images/neem_cake.png": neemCake,
+  "/images/bone_meal.png": boneMeal,
+  "/images/bio_npk.png": bioNpk,
+  "/images/cow_dung.png": cowDung,
+  "/images/neem_oil.png": neemOil,
+  "/images/imidacloprid.png": imidacloprid,
+  "/images/chlorpyrifos.png": imidacloprid,
+  "/images/glyphosate.png": neemOil,
+  "/images/copper_oxychloride.png": imidacloprid,
 };
 
 // Default fallback image
-const defaultImage = fertilizer1;
+const defaultImage = urea;
 
 /**
  * Get the correct image source for a product
