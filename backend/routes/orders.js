@@ -159,6 +159,7 @@ router.post('/', protect, async (req, res, next) => {
       totalAmount,
       shippingAddress,
       paymentMethod,
+      orderStatus: paymentMethod === 'cash_on_delivery' ? 'confirmed' : 'pending',
       notes
     });
 
@@ -170,10 +171,22 @@ router.post('/', protect, async (req, res, next) => {
       );
     }
 
-    // Add order to user's orders
+    // Add order to user's orders and sync the shipping address to their profile
     await User.findByIdAndUpdate(
       req.user.id,
-      { $push: { orders: order._id } }
+      {
+        $push: { orders: order._id },
+        $set: {
+          address: {
+            street: shippingAddress.street,
+            city: shippingAddress.city,
+            state: shippingAddress.state,
+            zipCode: shippingAddress.zipCode,
+            country: 'India'
+          },
+          phone: shippingAddress.phone
+        }
+      }
     );
 
     // Clear cart

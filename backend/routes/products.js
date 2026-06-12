@@ -66,7 +66,7 @@ router.get('/', [
     }
 
     const page = parseInt(req.query.page) || 1;
-    const limit = parseInt(req.query.limit) || 12;
+    const limit = parseInt(req.query.limit) || 24;
     const skip = (page - 1) * limit;
     const sort = req.query.sort || '-createdAt';
 
