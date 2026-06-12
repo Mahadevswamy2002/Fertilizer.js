@@ -78,6 +78,44 @@ function Home({ products = [] }) {
         </div>
       </section>
 
+      <section className="home-section home-tools-section">
+        <div className="home-section-heading">
+          <span>Enhance Your Farming</span>
+          <h2>Smart Farming Tools</h2>
+        </div>
+        <div className="home-tools-grid">
+          <div className="home-tool-card calculator-promo">
+            <div className="tool-icon-wrapper">
+              <span className="tool-icon">📊</span>
+            </div>
+            <h3>Smart Yield Planner</h3>
+            <p>
+              Maximize your farm's productivity. Estimate crop yields, calculate optimized fertilizer quantities, and balance soil nutrients for better harvests.
+            </p>
+            <Link to="/calculator" className="tool-card-btn">
+              Open Yield Planner ➔
+            </Link>
+          </div>
+
+          <div className="home-tool-card chatbot-promo">
+            <div className="tool-icon-wrapper">
+              <span className="tool-icon">🩺</span>
+            </div>
+            <h3>AI Agro Doctor</h3>
+            <p>
+              Got plant health problems or crop symptoms? Get instant diagnostics, weed & pest advice, and targeted product solutions from our virtual AI assistant.
+            </p>
+            <button 
+              type="button" 
+              className="tool-card-btn"
+              onClick={() => window.dispatchEvent(new CustomEvent('open-agro-chat'))}
+            >
+              Consult AI Doctor ➔
+            </button>
+          </div>
+        </div>
+      </section>
+
       <section className="home-section home-products">
         <div className="home-section-heading home-products-heading">
           <div>

@@ -13,6 +13,7 @@ import Payment from "./components/Payment";
 import Login from "./components/Login";
 import AboutUs from "./components/AboutUs";
 import YieldCalculator from "./components/YieldCalculator";
+import AgroDoctorChat from "./components/AgroDoctorChat";
 import { AuthProvider } from "./contexts/AuthContext";
 import { ProductModalProvider } from "./contexts/ProductModalContext";
 import productService from "./services/productService";
@@ -67,6 +68,7 @@ function App() {
               draggable
               pauseOnHover
             />
+            <AgroDoctorChat />
           </div>
         </Router>
       </ProductModalProvider>
