@@ -102,16 +102,19 @@
   bottom: 80px;
   right: 0;
   width: 380px;
-  height: 520px;
-  background-color: #ffffff;
+  height: 540px;
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(16px) saturate(120%);
+  -webkit-backdrop-filter: blur(16px) saturate(120%);
   border-radius: 16px;
-  border: 1px solid #edf2ed;
-  box-shadow: 0 12px 40px rgba(27, 67, 50, 0.15);
+  border: 1px solid rgba(27, 67, 50, 0.15);
+  box-shadow: 0 16px 48px rgba(27, 67, 50, 0.2);
   display: flex;
   flex-direction: column;
   overflow: hidden;
   animation: chatSlideUp 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
   box-sizing: border-box;
+  transition: all 0.3s ease;
 }
 
 @keyframes chatSlideUp {
@@ -270,6 +273,22 @@
 
 .message-bubble p {
   margin: 0;
+}
+
+.message-bubble li {
+  margin-left: 14px;
+  margin-bottom: 4px;
+  font-size: 13px;
+  line-height: 1.45;
+}
+
+.message-bubble strong {
+  font-weight: 700;
+  color: #1b4332;
+}
+
+.message-wrapper.user .message-bubble strong {
+  color: #ffffff;
 }
 
 /* Chat Product Card */
@@ -445,3 +464,85 @@
   color: #b2c2b7;
   cursor: not-allowed;
 }
+
+/* Quick actions menu */
+.chat-quick-actions {
+  display: flex;
+  gap: 8px;
+  padding: 8px 16px;
+  background-color: transparent;
+  border-top: 1px solid rgba(27, 67, 50, 0.08);
+  overflow-x: auto;
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE 10+ */
+}
+
+.chat-quick-actions::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Opera */
+}
+
+.quick-action-chip {
+  background: rgba(243, 247, 241, 0.95);
+  color: #2f7d32;
+  border: 1px solid rgba(47, 125, 50, 0.25);
+  border-radius: 14px;
+  padding: 6px 12px;
+  font-size: 11px;
+  font-weight: 700;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+  box-shadow: 0 2px 5px rgba(27, 67, 50, 0.04);
+}
+
+.quick-action-chip:hover {
+  background: #2f7d32;
+  color: #ffffff;
+  border-color: #2f7d32;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(47, 125, 50, 0.15);
+}
+
+.quick-action-chip:active {
+  transform: translateY(0);
+}
+
+/* Voice & Upload Actions */
+.chat-action-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  transition: all 0.2s ease;
+  user-select: none;
+}
+
+.chat-action-btn:hover {
+  background-color: #f3f7f1;
+}
+
+.mic-btn.listening {
+  background-color: #fff1f0;
+  border: 1px solid #ffa39e !important;
+  animation: pulseRed 1.5s infinite ease-in-out;
+}
+
+@keyframes pulseRed {
+  0% { box-shadow: 0 0 0 0 rgba(207, 19, 34, 0.4); }
+  70% { box-shadow: 0 0 0 8px rgba(207, 19, 34, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(207, 19, 34, 0); }
+}
+
+.chat-msg-image-container {
+  overflow: hidden;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+}
+
+.chat-voice-bar {
+  border-bottom: none;
+  background-color: transparent;
+}
+

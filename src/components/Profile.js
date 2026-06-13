@@ -6,7 +6,9 @@ import { useProductModal } from '../contexts/ProductModalContext';
 import userService from '../services/userService';
 import orderService from '../services/orderService';
 import { getProductImage } from '../utils/imageMapper';
-import "./ProfileCss.css"
+import "./ProfileCss.css";
+import { jsPDF } from 'jspdf';
+
 
 function Profile() {
   const { openProductModal } = useProductModal();
@@ -144,6 +146,163 @@ function Profile() {
       setOrderToCancel(null);
     }
   };
+
+  const handleDownloadInvoice = (order) => {
+    try {
+      const doc = new jsPDF({
+        orientation: 'p',
+        unit: 'mm',
+        format: 'a4'
+      });
+
+      const primaryColor = [27, 67, 50]; // #1b4332
+      const secondaryColor = [47, 125, 50]; // #2f7d32
+      const textColor = [31, 42, 36]; // #1f2a24
+      const lightGray = [226, 235, 213]; // #e2ebd5
+      const borderGray = [220, 230, 220]; // #dce6dc
+
+      // 1. Header Banner
+      doc.setFillColor(...primaryColor);
+      doc.rect(0, 0, 210, 35, 'F');
+
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(20);
+      doc.setTextColor(255, 255, 255);
+      doc.text('AGRO PORTAL E-COMMERCE', 14, 22);
+
+      doc.setFont('helvetica', 'italic');
+      doc.setFontSize(10);
+      doc.setTextColor(200, 220, 210);
+      doc.text('Commercial Tax Invoice & Receipt', 14, 28);
+
+      // Reset Text Color
+      doc.setTextColor(...textColor);
+
+      // 2. Invoice Details block
+      let y = 46;
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(11);
+      doc.setTextColor(...primaryColor);
+      doc.text('INVOICE DETAILS', 14, y);
+      doc.setDrawColor(...lightGray);
+      doc.line(14, y + 2, 196, y + 2);
+
+      y += 10;
+      doc.setFont('helvetica', 'bold'); doc.text('Order Ref:', 14, y);
+      doc.setFont('helvetica', 'normal'); doc.setFontSize(10); doc.text(`#${order.orderNumber}`, 40, y);
+
+      doc.setFont('helvetica', 'bold'); doc.setFontSize(11); doc.text('Invoice Date:', 105, y);
+      doc.setFont('helvetica', 'normal'); doc.setFontSize(10); doc.text(formatDate(order.createdAt), 135, y);
+
+      y += 6;
+      doc.setFont('helvetica', 'bold'); doc.setFontSize(11); doc.text('Payment Type:', 14, y);
+      doc.setFont('helvetica', 'normal'); doc.setFontSize(10); doc.text(order.paymentMethod.replace('_', ' ').toUpperCase(), 40, y);
+
+      doc.setFont('helvetica', 'bold'); doc.setFontSize(11); doc.text('Order Status:', 105, y);
+      doc.setFont('helvetica', 'normal'); doc.setFontSize(10); doc.text(order.orderStatus.toUpperCase(), 135, y);
+
+      // 3. Customer & Shipping Details
+      y += 14;
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(11);
+      doc.setTextColor(...primaryColor);
+      doc.text('DELIVERY & BILLING TO', 14, y);
+      doc.line(14, y + 2, 196, y + 2);
+
+      y += 10;
+      doc.setFont('helvetica', 'bold'); doc.text('Customer Name:', 14, y);
+      doc.setFont('helvetica', 'normal'); doc.setFontSize(10); doc.text(String(order.shippingAddress?.name || profileData.name), 48, y);
+
+      doc.setFont('helvetica', 'bold'); doc.setFontSize(11); doc.text('Phone Number:', 105, y);
+      doc.setFont('helvetica', 'normal'); doc.setFontSize(10); doc.text(String(order.shippingAddress?.phone || profileData.phone || 'N/A'), 135, y);
+
+      y += 6;
+      doc.setFont('helvetica', 'bold'); doc.setFontSize(11); doc.text('Email Address:', 14, y);
+      doc.setFont('helvetica', 'normal'); doc.setFontSize(10); doc.text(String(profileData.email), 48, y);
+
+      if (order.shippingAddress) {
+        y += 6;
+        doc.setFont('helvetica', 'bold'); doc.setFontSize(11); doc.text('Shipping Address:', 14, y);
+        doc.setFont('helvetica', 'normal'); doc.setFontSize(10);
+        doc.text(`${order.shippingAddress.street}, ${order.shippingAddress.city}`, 48, y);
+        y += 5;
+        doc.text(`${order.shippingAddress.state} - ${order.shippingAddress.zipCode}`, 48, y);
+      }
+
+      // 4. Itemized Purchases Table
+      y += 14;
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(11);
+      doc.setTextColor(...primaryColor);
+      doc.text('ITEMIZED PURCHASES', 14, y);
+      doc.line(14, y + 2, 196, y + 2);
+
+      y += 8;
+      // Header row
+      doc.setFillColor(243, 247, 241);
+      doc.rect(14, y, 182, 8, 'F');
+      doc.setDrawColor(...borderGray);
+      doc.rect(14, y, 182, 8, 'S');
+
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(9);
+      doc.text('Product Item Description', 16, y + 5);
+      doc.text('Quantity', 115, y + 5);
+      doc.text('Unit Price (Rs.)', 145, y + 5);
+      doc.text('Subtotal (Rs.)', 175, y + 5);
+
+      y += 8;
+      doc.setFont('helvetica', 'normal');
+      doc.setFontSize(10);
+      doc.setTextColor(...textColor);
+
+      order.items.forEach((item) => {
+        doc.rect(14, y, 182, 8, 'S');
+        doc.text(item.name, 16, y + 5);
+        doc.text(`${item.quantity}`, 115, y + 5);
+        doc.text(`${item.price.toFixed(2)}`, 145, y + 5);
+        doc.text(`${(item.quantity * item.price).toFixed(2)}`, 175, y + 5);
+        y += 8;
+      });
+
+      // Total Summaries
+      doc.setFillColor(251, 253, 250);
+      doc.rect(14, y, 182, 10, 'F');
+      doc.rect(14, y, 182, 10, 'S');
+
+      doc.setFont('helvetica', 'bold');
+      doc.text('TOTAL AMOUNT INVOICED:', 110, y + 6);
+      doc.setTextColor(...secondaryColor);
+      doc.text(`Rs.${order.totalAmount.toFixed(2)}`, 175, y + 6);
+
+      // Support & Greetings footer
+      y += 24;
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(11);
+      doc.setTextColor(...primaryColor);
+      doc.text('THANK YOU FOR YOUR BUSINESS!', 14, y);
+      
+      doc.setFont('helvetica', 'normal');
+      doc.setFontSize(9);
+      doc.setTextColor(...textColor);
+      doc.text('For queries regarding billing, shipments, or returns, contact support@agroportal.com.', 14, y + 6);
+
+      doc.setDrawColor(...lightGray);
+      doc.line(14, 275, 196, 275);
+      doc.setFont('helvetica', 'normal');
+      doc.setFontSize(8);
+      doc.setTextColor(122, 140, 128);
+      doc.text('Agro Portal E-Commerce System', 14, 280);
+      doc.text('Page 1 of 1', 185, 280);
+
+      doc.save(`Agro_Invoice_${order.orderNumber}.pdf`);
+      toast.success('Invoice downloaded successfully!');
+    } catch (error) {
+      console.error(error);
+      toast.error('Failed to generate invoice PDF');
+    }
+  };
+
 
   const getDisplayStatus = (status, paymentMethod) => {
     if (status.toLowerCase() === 'pending') {
@@ -445,8 +604,8 @@ function Profile() {
                             ))}
                           </div>
 
-                          {['pending', 'confirmed', 'processing'].includes(order.orderStatus.toLowerCase()) && (
-                            <div className="order-receipt-actions">
+                          <div className="order-receipt-actions">
+                            {['pending', 'confirmed', 'processing'].includes(order.orderStatus.toLowerCase()) && (
                               <button
                                 type="button"
                                 className="cancel-order-btn"
@@ -454,8 +613,16 @@ function Profile() {
                               >
                                 Cancel Order
                               </button>
-                            </div>
-                          )}
+                            )}
+                            <button
+                              type="button"
+                              className="download-invoice-btn"
+                              onClick={() => handleDownloadInvoice(order)}
+                            >
+                              📄 Download Invoice
+                            </button>
+                          </div>
+
                         </div>
                       )}
 
