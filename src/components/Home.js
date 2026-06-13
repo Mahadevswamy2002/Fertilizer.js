@@ -1,14 +1,16 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import Product from './Products';
-import fertilizerImage from '../images/fertilizer1.png';
-import seedsImage from '../images/fertilizer9.jpeg';
-import organicImage from '../images/fertilizer3.png';
-import pesticidesImage from '../images/fertilizer6.png';
+import { useProductModal } from '../contexts/ProductModalContext';
+import fertilizerImage from '../images/urea.png';
+import seedsImage from '../images/maize_seeds.png';
+import organicImage from '../images/vermicompost.png';
+import pesticidesImage from '../images/neem_oil.png';
 import './HomeCss.css';
 import "./ProductsCss.css"
 
 function Home({ products = [] }) {
+  const { openProductModal } = useProductModal();
   const featuredProducts = products.slice(0, 6);
   const categories = [
     { name: 'Fertilizers', value: 'fertilizer', image: fertilizerImage },
@@ -22,7 +24,7 @@ function Home({ products = [] }) {
       <section className="home-hero">
         <div className="home-hero-content">
           <p className="home-eyebrow">Agro essentials for better yield</p>
-          <h1>Nirmala Agro Agencies</h1>
+          <h1>Agro Agencies</h1>
           <p className="home-hero-text">
             Quality fertilizers, seeds, and farm inputs selected for practical field needs.
           </p>
@@ -34,8 +36,8 @@ function Home({ products = [] }) {
 
         <div className="home-hero-panel">
           <span>Trusted by farmers</span>
-          <strong>12+</strong>
-          <p>Demo products across fertilizer, seed, and organic categories.</p>
+          <strong>20</strong>
+          <p>Premium products across fertilizers, seeds, organic, and pesticides categories.</p>
         </div>
       </section>
 
@@ -76,6 +78,44 @@ function Home({ products = [] }) {
         </div>
       </section>
 
+      <section className="home-section home-tools-section">
+        <div className="home-section-heading">
+          <span>Enhance Your Farming</span>
+          <h2>Smart Farming Tools</h2>
+        </div>
+        <div className="home-tools-grid">
+          <div className="home-tool-card calculator-promo">
+            <div className="tool-icon-wrapper">
+              <span className="tool-icon">📊</span>
+            </div>
+            <h3>Smart Yield Planner</h3>
+            <p>
+              Maximize your farm's productivity. Estimate crop yields, calculate optimized fertilizer quantities, and balance soil nutrients for better harvests.
+            </p>
+            <Link to="/calculator" className="tool-card-btn">
+              Open Yield Planner ➔
+            </Link>
+          </div>
+
+          <div className="home-tool-card chatbot-promo">
+            <div className="tool-icon-wrapper">
+              <span className="tool-icon">🩺</span>
+            </div>
+            <h3>AI Agro Doctor</h3>
+            <p>
+              Got plant health problems or crop symptoms? Get instant diagnostics, weed & pest advice, and targeted product solutions from our virtual AI assistant.
+            </p>
+            <button 
+              type="button" 
+              className="tool-card-btn"
+              onClick={() => window.dispatchEvent(new CustomEvent('open-agro-chat'))}
+            >
+              Consult AI Doctor ➔
+            </button>
+          </div>
+        </div>
+      </section>
+
       <section className="home-section home-products">
         <div className="home-section-heading home-products-heading">
           <div>
@@ -86,21 +126,21 @@ function Home({ products = [] }) {
         </div>
         <div className="home-featured-grid">
           {featuredProducts.map(product => (
-            <Product key={product._id} product={product} />
+            <Product key={product._id} product={product} onProductClick={openProductModal} />
           ))}
         </div>
       </section>
 
       <section className="home-support">
         <div>
-          <span>Project highlight</span>
-          <h2>Built for a complete fertilizer store workflow</h2>
+          <span>Store highlight</span>
+          <h2>Quality agriculture inputs for your farm</h2>
           <p>
-            The system supports product browsing, authentication, cart management,
-            checkout, profile, and order features for an academic MERN stack project.
+            Established in Gundlupete in 1979, Agro Agencies provides a complete range of 
+            premium fertilizers, seeds, organic supplies, and expert support to help farmers achieve maximum yield.
           </p>
         </div>
-        <Link to="/about">About Project</Link>
+        <Link to="/about">About Us</Link>
       </section>
     </div>
   );

@@ -125,181 +125,241 @@ function Payment() {
 
   if (!isAuthenticated) {
     return (
-      <div className="payment">
-        <h1>Payment</h1>
-        <p>Please login to proceed with payment.</p>
+      <div className="checkout-empty-state">
+        <div className="empty-state-card">
+          <h1>Checkout</h1>
+          <p>Please login to proceed with your checkout.</p>
+          <button className="primary-btn" onClick={() => navigate('/login')}>Login Now</button>
+        </div>
       </div>
     );
   }
 
   if (loading) {
     return (
-      <div className="payment">
-        <h1>Payment</h1>
-        <div style={{ textAlign: 'center', padding: '40px' }}>Loading...</div>
+      <div className="checkout-loading-state">
+        <div className="loading-spinner-container">
+          <div className="loading-spinner"></div>
+          <p>Preparing checkout...</p>
+        </div>
       </div>
     );
   }
 
   if (!cart || cart.items.length === 0) {
     return (
-      <div className="payment">
-        <h1>Payment</h1>
-        <div style={{ textAlign: 'center', padding: '40px' }}>
-          <p>Your cart is empty.</p>
-          <button onClick={() => navigate('/products')}>Continue Shopping</button>
+      <div className="checkout-empty-state">
+        <div className="empty-state-card">
+          <h1>Checkout</h1>
+          <p>Your cart is currently empty. Add some quality farm supplies to get started!</p>
+          <button className="primary-btn" onClick={() => navigate('/products')}>Browse Products</button>
         </div>
       </div>
     );
   }
 
+  // Calculate order totals (matching backend routes/orders.js exactly)
+  const subtotal = cart.totalPrice;
+  const tax = Math.round(subtotal * 0.18 * 100) / 100; // 18% GST
+  const shipping = subtotal > 500 ? 0 : 50; // Free shipping above ₹500
+  const totalAmount = subtotal + tax + shipping;
+
   return (
-    <div className="payment">
-      <h1>Checkout</h1>
-
-      {/* Order Summary */}
-      <div style={{ marginBottom: '30px', padding: '20px', border: '1px solid #ddd', borderRadius: '8px' }}>
-        <h2>Order Summary</h2>
-        {cart.items.map((item) => (
-          <div key={`${item.product._id}-${item.size}`} style={{
-            display: 'flex',
-            justifyContent: 'space-between',
-            padding: '10px 0',
-            borderBottom: '1px solid #eee'
-          }}>
-            <span>{item.product.name} x {item.quantity}</span>
-            <span>Rs.{(item.price * item.quantity).toFixed(2)}</span>
-          </div>
-        ))}
-        <div style={{
-          display: 'flex',
-          justifyContent: 'space-between',
-          padding: '15px 0',
-          fontWeight: 'bold',
-          fontSize: '18px',
-          borderTop: '2px solid #ddd',
-          marginTop: '10px'
-        }}>
-          <span>Total: Rs.{cart.totalPrice.toFixed(2)}</span>
-        </div>
+    <div className="checkout-page">
+      <div className="checkout-header">
+        <h1>Checkout</h1>
+        <p className="checkout-subtitle">Secure order placement and address verification</p>
       </div>
 
-      {/* Shipping Address */}
-      <div style={{ marginBottom: '30px' }}>
-        <h2>Shipping Address</h2>
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '15px' }}>
-          <input
-            type="text"
-            name="name"
-            placeholder="Full Name"
-            value={shippingAddress.name}
-            onChange={handleAddressChange}
-            required
-            style={{ padding: '10px', border: '1px solid #ddd', borderRadius: '4px' }}
-          />
-          <input
-            type="tel"
-            name="phone"
-            placeholder="Phone Number"
-            value={shippingAddress.phone}
-            onChange={handleAddressChange}
-            required
-            style={{ padding: '10px', border: '1px solid #ddd', borderRadius: '4px' }}
-          />
-          <input
-            type="text"
-            name="street"
-            placeholder="Street Address"
-            value={shippingAddress.street}
-            onChange={handleAddressChange}
-            required
-            style={{ padding: '10px', border: '1px solid #ddd', borderRadius: '4px', gridColumn: '1 / -1' }}
-          />
-          <input
-            type="text"
-            name="city"
-            placeholder="City"
-            value={shippingAddress.city}
-            onChange={handleAddressChange}
-            required
-            style={{ padding: '10px', border: '1px solid #ddd', borderRadius: '4px' }}
-          />
-          <input
-            type="text"
-            name="state"
-            placeholder="State"
-            value={shippingAddress.state}
-            onChange={handleAddressChange}
-            required
-            style={{ padding: '10px', border: '1px solid #ddd', borderRadius: '4px' }}
-          />
-          <input
-            type="text"
-            name="zipCode"
-            placeholder="ZIP Code"
-            value={shippingAddress.zipCode}
-            onChange={handleAddressChange}
-            required
-            style={{ padding: '10px', border: '1px solid #ddd', borderRadius: '4px' }}
-          />
-        </div>
-      </div>
-
-      {/* Payment Method */}
-      <div style={{ marginBottom: '30px' }}>
-        <h2>Payment Method</h2>
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-          <label style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-            <input
-              type="radio"
-              value="cash_on_delivery"
-              checked={paymentMethod === 'cash_on_delivery'}
-              onChange={(e) => setPaymentMethod(e.target.value)}
-            />
-            Cash on Delivery
-          </label>
-          <label style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-            <input
-              type="radio"
-              value="upi"
-              checked={paymentMethod === 'upi'}
-              onChange={(e) => setPaymentMethod(e.target.value)}
-            />
-            UPI Payment
-          </label>
-          <label style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-            <input
-              type="radio"
-              value="net_banking"
-              checked={paymentMethod === 'net_banking'}
-              onChange={(e) => setPaymentMethod(e.target.value)}
-            />
-            Net Banking
-          </label>
-          {(paymentMethod === 'upi' || paymentMethod === 'net_banking') && (
-            <div className="payment-methods-image" style={{ marginTop: '15px' }}>
-              <img src={payment} alt="Available Online Payment Methods" style={{ maxWidth: '100%', height: 'auto' }} />
+      <div className="checkout-layout">
+        {/* Left Column: Shipping & Payment Info */}
+        <div className="checkout-main">
+          {/* Shipping Address */}
+          <div className="checkout-section-card">
+            <h2 className="section-title">
+              <span className="section-number">1</span> Shipping Address
+            </h2>
+            <div className="address-form-grid">
+              <div className="form-group">
+                <label className="input-label">Full Name</label>
+                <input
+                  type="text"
+                  name="name"
+                  className="form-input"
+                  placeholder="e.g. Rahul Sharma"
+                  value={shippingAddress.name}
+                  onChange={handleAddressChange}
+                  required
+                />
+              </div>
+              <div className="form-group">
+                <label className="input-label">Phone Number</label>
+                <input
+                  type="tel"
+                  name="phone"
+                  className="form-input"
+                  placeholder="10-digit mobile number"
+                  value={shippingAddress.phone}
+                  onChange={handleAddressChange}
+                  required
+                />
+              </div>
+              <div className="form-group col-span-2">
+                <label className="input-label">Street Address</label>
+                <input
+                  type="text"
+                  name="street"
+                  className="form-input"
+                  placeholder="Flat/House no., Colony, Street"
+                  value={shippingAddress.street}
+                  onChange={handleAddressChange}
+                  required
+                />
+              </div>
+              <div className="form-group">
+                <label className="input-label">City</label>
+                <input
+                  type="text"
+                  name="city"
+                  className="form-input"
+                  placeholder="City"
+                  value={shippingAddress.city}
+                  onChange={handleAddressChange}
+                  required
+                />
+              </div>
+              <div className="form-group">
+                <label className="input-label">State</label>
+                <input
+                  type="text"
+                  name="state"
+                  className="form-input"
+                  placeholder="State"
+                  value={shippingAddress.state}
+                  onChange={handleAddressChange}
+                  required
+                />
+              </div>
+              <div className="form-group">
+                <label className="input-label">ZIP Code</label>
+                <input
+                  type="text"
+                  name="zipCode"
+                  className="form-input"
+                  placeholder="6-digit PIN code"
+                  value={shippingAddress.zipCode}
+                  onChange={handleAddressChange}
+                  required
+                />
+              </div>
             </div>
-          )}
+          </div>
+
+          {/* Payment Method */}
+          <div className="checkout-section-card">
+            <h2 className="section-title">
+              <span className="section-number">2</span> Payment Method
+            </h2>
+            <div className="payment-options-list">
+              <label className={`payment-option-card ${paymentMethod === 'cash_on_delivery' ? 'selected' : ''}`}>
+                <input
+                  type="radio"
+                  name="paymentMethod"
+                  value="cash_on_delivery"
+                  checked={paymentMethod === 'cash_on_delivery'}
+                  onChange={(e) => setPaymentMethod(e.target.value)}
+                  className="payment-radio"
+                />
+                <div className="payment-option-info">
+                  <span className="payment-option-title">Cash on Delivery (COD)</span>
+                  <span className="payment-option-desc">Pay with cash when your package is delivered.</span>
+                </div>
+              </label>
+
+              <label className={`payment-option-card ${paymentMethod === 'upi' ? 'selected' : ''}`}>
+                <input
+                  type="radio"
+                  name="paymentMethod"
+                  value="upi"
+                  checked={paymentMethod === 'upi'}
+                  onChange={(e) => setPaymentMethod(e.target.value)}
+                  className="payment-radio"
+                />
+                <div className="payment-option-info">
+                  <span className="payment-option-title">UPI Payment</span>
+                  <span className="payment-option-desc">Scan QR or use UPI apps (GPay, PhonePe, Paytm).</span>
+                </div>
+              </label>
+
+              <label className={`payment-option-card ${paymentMethod === 'net_banking' ? 'selected' : ''}`}>
+                <input
+                  type="radio"
+                  name="paymentMethod"
+                  value="net_banking"
+                  checked={paymentMethod === 'net_banking'}
+                  onChange={(e) => setPaymentMethod(e.target.value)}
+                  className="payment-radio"
+                />
+                <div className="payment-option-info">
+                  <span className="payment-option-title">Net Banking</span>
+                  <span className="payment-option-desc">Transfer directly via your net banking portal.</span>
+                </div>
+              </label>
+
+              {(paymentMethod === 'upi' || paymentMethod === 'net_banking') && (
+                <div className="payment-methods-preview-box">
+                  <img src={payment} alt="Supported Payment Gateways" className="payment-methods-img" />
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+
+        {/* Right Column: Sticky Summary */}
+        <div className="checkout-sidebar">
+          <div className="checkout-summary-card">
+            <h2 className="summary-title">Order Summary</h2>
+            <div className="summary-items-list">
+              {cart.items.map((item) => (
+                <div key={`${item.product._id}-${item.size}`} className="summary-item-row">
+                  <div className="summary-item-details">
+                    <span className="item-name">{item.product.name}</span>
+                    <span className="item-qty">Qty: {item.quantity}</span>
+                  </div>
+                  <span className="item-price">Rs.{(item.price * item.quantity).toFixed(2)}</span>
+                </div>
+              ))}
+            </div>
+
+            <div className="summary-totals-box">
+              <div className="totals-row">
+                <span>Product Cost (Subtotal)</span>
+                <span>Rs.{subtotal.toFixed(2)}</span>
+              </div>
+              <div className="totals-row">
+                <span>GST (18% Tax)</span>
+                <span>Rs.{tax.toFixed(2)}</span>
+              </div>
+              <div className="totals-row">
+                <span>Shipping</span>
+                <span>{shipping === 0 ? <span className="shipping-free">FREE</span> : `Rs.${shipping.toFixed(2)}`}</span>
+              </div>
+              <div className="totals-row grand-total-row">
+                <span>Total Cost</span>
+                <span>Rs.{totalAmount.toFixed(2)}</span>
+              </div>
+            </div>
+
+            <button
+              className="place-order-btn"
+              onClick={handlePayment}
+              disabled={processing}
+            >
+              {processing ? 'Processing Order...' : `Place Order • Rs.${totalAmount.toFixed(2)}`}
+            </button>
+          </div>
         </div>
       </div>
-
-      <button
-        onClick={handlePayment}
-        disabled={processing}
-        style={{
-          width: '100%',
-          padding: '15px',
-          fontSize: '18px',
-          background: processing ? '#ccc' : '#28a745',
-          color: 'white',
-          border: 'none',
-          borderRadius: '8px',
-          cursor: processing ? 'not-allowed' : 'pointer'
-        }}
-      >
-        {processing ? 'Processing...' : `Place Order - Rs.${cart.totalPrice.toFixed(2)}`}
-      </button>
     </div>
   );
 }

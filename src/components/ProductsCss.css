@@ -1,86 +1,245 @@
-/* ProductCardCss.css */
-
-.productcart {
-  width: 100%;
-  min-height: 100vh;
-  background-image: url('../images/loging_bg.jfif'); /* Add your background image here */
-  background-size: cover;
-  background-position: center;
-  padding: 20px;
-  box-sizing: border-box;
-}
-
-.productcart h1 {
-  text-align: center;
-  color: white;
-  margin-bottom: 20px;
-}
-
+/* Products Grid Layout */
 .products {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-around;
-  gap: 20px;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 25px;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 10px 0;
 }
 
+/* Individual Product Card */
 .product {
-  background-color: white;
-  border: 1px solid #ddd;
-  border-radius: 10px;
-  padding: 15px;
-  text-align: center;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-  transition: transform 0.2s;
-  width: calc(33.333% - 20px); /* Ensures 3 items per row */
+  background-color: #ffffff;
+  border: 1px solid #e2ebd5;
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  display: flex;
+  flex-direction: column;
   box-sizing: border-box;
-}
-
-.product img {
-  max-width: 100%;
-  height: auto;
-  border-radius: 10px;
-  margin-bottom: 10px;
-}
-
-.product h2 {
-  font-size: 1.2em;
-  margin: 10px 0;
-}
-
-.product p {
-  font-size: 0.9em;
-  color: #666;
-}
-
-.product h3 {
-  font-size: 1.1em;
-  color: #333;
-}
-
-.product select,
-.product button {
-  margin-top: 10px;
 }
 
 .product:hover {
-  transform: scale(1.05);
+  transform: translateY(-6px);
+  box-shadow: 0 12px 24px rgba(46, 125, 50, 0.08);
+  border-color: #c5dcbc;
 }
 
-.product select {
-  padding: 5px;
+/* Image Container & Badges */
+.product-image-container {
+  position: relative;
   width: 100%;
-  margin-bottom: 10px;
+  height: 210px;
+  background-color: #f7faf5;
+  overflow: hidden;
+  border-bottom: 1px solid #edf2e8;
 }
 
-.product button {
-  background-color: #007bff;
-  color: white;
-  border: none;
+.product-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s ease;
+}
+
+.product:hover .product-image {
+  transform: scale(1.04);
+}
+
+.product-badge {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  padding: 5px 12px;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  z-index: 2;
+}
+
+/* Category Specific Colors */
+.badge-fertilizer {
+  background-color: #795548;
+  color: #ffffff;
+}
+
+.badge-seeds {
+  background-color: #ffb300;
+  color: #1a1a1a;
+}
+
+.badge-organic {
+  background-color: #2e7d32;
+  color: #ffffff;
+}
+
+.badge-pesticides {
+  background-color: #c62828;
+  color: #ffffff;
+}
+
+/* Product Info Section */
+.product-info {
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  text-align: left;
+}
+
+.product-name {
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: #1b4d3e;
+  margin: 0 0 6px 0;
+  line-height: 1.3;
+}
+
+.product-rating {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-bottom: 8px;
+}
+
+.product-rating .stars {
+  color: #ffb300;
+  font-size: 0.95rem;
+  letter-spacing: 1px;
+}
+
+.product-rating .rating-num {
+  font-size: 0.8rem;
+  color: #7a8c80;
+}
+
+.product-desc {
+  font-size: 0.85rem;
+  color: #617469;
+  margin: 0 0 14px 0;
+  line-height: 1.45;
+  height: 38px;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+
+.product-price-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: auto;
+  padding-top: 8px;
+}
+
+.product-price {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #2e7d32;
+}
+
+/* Stock Badges */
+.product-stock {
+  font-size: 0.72rem;
+  font-weight: 600;
+  padding: 3px 8px;
+  border-radius: 4px;
+  text-transform: uppercase;
+}
+
+.stock-ok {
+  background-color: #e8f5e9;
+  color: #2e7d32;
+}
+
+.stock-low {
+  background-color: #fff3e0;
+  color: #e65100;
+}
+
+.stock-out {
+  background-color: #ffebee;
+  color: #c62828;
+}
+
+/* Product Actions (Add to Cart area) */
+.product-actions {
+  display: flex;
+  padding: 12px 16px 16px 16px;
+  gap: 10px;
+  border-top: 1px solid #edf2e8;
+  background-color: #fafbfa;
+}
+
+.product-qty-select {
+  width: 70px;
   padding: 10px;
-  border-radius: 5px;
+  font-size: 0.88rem;
+  border: 1px solid #c8d3cc;
+  border-radius: 8px;
+  outline: none;
+  background-color: #ffffff;
   cursor: pointer;
+  appearance: none;
+  background-image: url("data:image/svg+xml;utf8,<svg fill='%232e7d32' height='24' viewBox='0 0 24 24' width='24' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5z'/><path d='M0 0h24v24H0z' fill='none'/></svg>");
+  background-repeat: no-repeat;
+  background-position: right 4px center;
+  background-size: 16px;
+  padding-right: 18px;
+  transition: all 0.2s;
 }
 
-.product button:hover {
-  background-color: #0056b3;
+.product-qty-select:focus {
+  border-color: #2e7d32;
+}
+
+.product-add-btn {
+  flex-grow: 1;
+  padding: 10px 16px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  background-color: #2e7d32;
+  color: #ffffff;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 4px rgba(46, 125, 50, 0.15);
+}
+
+.product-add-btn:hover:not(:disabled) {
+  background-color: #1b5e20;
+  box-shadow: 0 4px 8px rgba(46, 125, 50, 0.25);
+}
+
+.product-add-btn:active:not(:disabled) {
+  background-color: #0d5302;
+}
+
+.product-add-btn:disabled {
+  background-color: #b2c2b7;
+  color: #ffffff;
+  box-shadow: none;
+  cursor: not-allowed;
+}
+
+/* Make image & name cards clickable with hover effects */
+.product-clickable {
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+.product-clickable:hover {
+  opacity: 0.9;
+}
+
+h2.product-name.product-clickable:hover {
+  color: #2e7d32;
+  text-decoration: underline;
 }

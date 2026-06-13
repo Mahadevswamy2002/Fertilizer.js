@@ -29,7 +29,8 @@ API.interceptors.response.use(
     return response;
   },
   (error) => {
-    if (error.response?.status === 401) {
+    const isAuthRoute = error.config?.url?.includes('/auth/login') || error.config?.url?.includes('/auth/register');
+    if (error.response?.status === 401 && !isAuthRoute) {
       // Token expired or invalid
       localStorage.removeItem('token');
       localStorage.removeItem('user');
